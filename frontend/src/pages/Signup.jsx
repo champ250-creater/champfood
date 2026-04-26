@@ -44,7 +44,8 @@ export default function Signup() {
 
     try {
       const response = await authService.signup(email, password, name);
-      storeAuthToken(response.data.token, response.data.user);
+      // FIXED: Added .data.data to correctly grab the token and user!
+      storeAuthToken(response.data.data.token, response.data.data.user);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Signup failed');
