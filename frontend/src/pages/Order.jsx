@@ -88,7 +88,7 @@ export default function Order() {
   };
 
   const handleOrderViaWhatsApp = () => {
-    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '250798880004';
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '250785032720';
     const message = formatOrderForWhatsApp(
       orderData.items,
       orderData.total,
