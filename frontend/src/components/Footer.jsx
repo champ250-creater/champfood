@@ -10,7 +10,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h4 className="font-bold mb-4">About FoodHub</h4>
+            <h4 className="font-bold mb-4">About NZANIRA</h4>
             <p className="text-gray-400 text-sm">
               Your favorite food ordering platform delivering delicious meals to your doorstep.
             </p>
@@ -34,7 +34,7 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4">Contact</h4>
             <p className="text-gray-400 text-sm">Email: aimeishimwe2023@gmail.com</p>
-            <p className="text-gray-400 text-sm">Phone: (+250) 798 880 004</p>
+            <p className="text-gray-400 text-sm">Phone: (+250) 785 032 720</p>
           </div>
         </div>
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
