@@ -12,6 +12,7 @@ import Privacy from './pages/Privacy'; // ✅ Now this file exists!
 import About from './pages/About';
 import Cart from './pages/Cart';
 import Order from './pages/Order';
+import Contact from './pages/Contact';
 import Orders from './pages/Orders';
 import './index.css';
 
@@ -31,7 +32,7 @@ function App() {
             <Route path="/faq" element={<FAQ />} />
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
-
+            <Route path="/contact" element={<Contact />} />
             <Route
               path="/cart"
               element={
