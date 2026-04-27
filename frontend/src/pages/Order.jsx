@@ -50,7 +50,7 @@ export default function Order() {
   };
 
   const handleOrderViaWhatsApp = () => {
-    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '0798880004';
+    const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '250798880004';
     const message = formatOrderForWhatsApp(
       orderData.items,
       orderData.total,
