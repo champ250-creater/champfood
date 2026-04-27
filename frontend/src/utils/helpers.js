@@ -32,7 +32,7 @@ export const generateWhatsAppURL = (phoneNumber, orderDetails) => {
 
 // Format order details for WhatsApp - Updated for RWF and Location
 export const formatOrderForWhatsApp = (items, totalPrice, orderId, location) => {
-  let message = `*champfood #${orderId}*\n\n`;
+  let message = `*NZANIRA #${orderId}*\n\n`;
   
   // NEW: Added the delivery location to the message
   if (location) {

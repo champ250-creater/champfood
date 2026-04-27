@@ -61,7 +61,7 @@ export default function Signup() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
       >
-        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Join ChampFood</h1>
+        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Join NZANIRA</h1>
         <p className="text-center text-gray-600 mb-8">Create an account and start ordering</p>
 
         {error && (

@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-          <p>&copy; 2025 champfood. All rights reserved.</p>
+          <p>&copy; 2025 NZANIRA. All rights reserved.</p>
         </div>
       </div>
     </motion.footer>
