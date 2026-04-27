@@ -10,9 +10,9 @@ export default function Order() {
   const [isPlacing, setIsPlacing] = useState(false);
   const [orderId, setOrderId] = useState(null);
   
-  // NEW: State to hold the delivery location
   const [deliveryLocation, setDeliveryLocation] = useState('');
   const [locationError, setLocationError] = useState('');
+  const [isGettingLocation, setIsGettingLocation] = useState(false);
 
   const orderData = location.state || {
     items: [],
@@ -38,17 +38,42 @@ export default function Order() {
     );
   }
 
+  // GPS Location Function with FIXED Google Maps Link
+  const handleGetLocation = () => {
+    if (!navigator.geolocation) {
+      setLocationError('Geolocation is not supported by your browser.');
+      return;
+    }
+
+    setIsGettingLocation(true);
+    setLocationError('');
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        // FIXED: Generates a proper, clickable Google Maps pin
+        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        setDeliveryLocation(mapsLink);
+        setIsGettingLocation(false);
+      },
+      (error) => {
+        console.error("Error getting location:", error);
+        setLocationError('Unable to get location. Please type it manually or check your browser permissions.');
+        setIsGettingLocation(false);
+      },
+      { enableHighAccuracy: true }
+    );
+  };
+
   const handlePlaceOrder = async () => {
-    // NEW: Don't let them order if they didn't type an address!
     if (!deliveryLocation.trim()) {
-      setLocationError('Please enter your delivery location.');
+      setLocationError('Please provide your delivery location.');
       return;
     }
     setLocationError('');
 
     try {
       setIsPlacing(true);
-      // NEW: Added deliveryLocation as the 3rd piece of data to send to the backend
       const response = await orderService.createOrder(
         orderData.items,
         orderData.total,
@@ -64,7 +89,6 @@ export default function Order() {
 
   const handleOrderViaWhatsApp = () => {
     const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '250798880004';
-    // NEW: Passed deliveryLocation to the WhatsApp formatter
     const message = formatOrderForWhatsApp(
       orderData.items,
       orderData.total,
@@ -94,8 +118,7 @@ export default function Order() {
 
             <h1 className="text-3xl font-bold text-dark mb-4">Order Created!</h1>
             <p className="text-gray-600 mb-6">
-              Order ID: <span className="font-bold text-primary">#{orderId}</span><br/>
-              Delivering to: <span className="font-bold">{deliveryLocation}</span>
+              Order ID: <span className="font-bold text-primary">#{orderId}</span>
             </p>
 
             <div className="bg-light p-6 rounded-lg mb-8">
@@ -183,25 +206,40 @@ export default function Order() {
             </div>
           </div>
 
-          {/* NEW: Delivery Address Input */}
+          {/* Delivery Address Input */}
           <div className="mb-8 p-6 border-2 border-gray-200 rounded-lg">
             <h3 className="font-bold text-dark mb-4">Delivery Details</h3>
             
             <div className="mb-4">
               <label className="block text-gray-700 font-semibold mb-2">Delivery Location *</label>
-              <input
-                type="text"
-                value={deliveryLocation}
-                onChange={(e) => {
-                  setDeliveryLocation(e.target.value);
-                  if (locationError) setLocationError('');
-                }}
-                placeholder="e.g., KK 509 St, Kicukiro"
-                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition ${
-                  locationError ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
-                }`}
-              />
-              {locationError && <p className="text-red-500 text-sm mt-1">{locationError}</p>}
+              
+              <button
+                type="button"
+                onClick={handleGetLocation}
+                disabled={isGettingLocation}
+                className="mb-3 w-full bg-blue-50 text-blue-600 border border-blue-200 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition flex items-center justify-center gap-2"
+              >
+                {isGettingLocation ? '⏳ Fetching GPS...' : '📍 Use My Current Location'}
+              </button>
+
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+                  OR
+                </div>
+                <input
+                  type="text"
+                  value={deliveryLocation}
+                  onChange={(e) => {
+                    setDeliveryLocation(e.target.value);
+                    if (locationError) setLocationError('');
+                  }}
+                  placeholder="Type address manually..."
+                  className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none transition ${
+                    locationError ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
+                  }`}
+                />
+              </div>
+              {locationError && <p className="text-red-500 text-sm mt-2">{locationError}</p>}
             </div>
 
             <p className="text-gray-600 text-sm">
