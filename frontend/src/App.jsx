@@ -9,6 +9,7 @@ import FoodDetails from './pages/FoodDetails';
 import FAQ from './pages/FAQ'; 
 import Terms from './pages/Terms'; 
 import Privacy from './pages/Privacy'; // ✅ Now this file exists!
+import About from './pages/About';
 import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Orders from './pages/Orders';
@@ -25,7 +26,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/food/:id" element={<FoodDetails />} />
-            
+            <Route path="/about" element={<About />} />
             {/* Support Pages */}
             <Route path="/faq" element={<FAQ />} />
             <Route path="/terms" element={<Terms />} />
