@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FoodDetails from './pages/FoodDetails';
+import FAQ from './pages/FAQ'; // ✅ Added this
 import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Orders from './pages/Orders';
@@ -22,6 +23,10 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/food/:id" element={<FoodDetails />} />
+            
+            {/* ✅ New FAQ Route - Publicly accessible */}
+            <Route path="/faq" element={<FAQ />} />
+
             <Route
               path="/cart"
               element={
@@ -46,6 +51,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Catch-all route must stay at the very bottom */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
