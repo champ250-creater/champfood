@@ -4,7 +4,7 @@ const FAQ = () => {
   const faqs = [
     { q: "How long does delivery take?", a: "Most orders in rwanda arrive within 30-45 minutes based on location." },
     { q: "What are your delivery hours?", a: "We operate  every day." },
-    { q: "Can I pay with MoMo?", a: "Yes! You can pay via WhatsApp upon delivery." },
+    { q: "Can I pay with MoMo?", a: "Yes! You can pay via mobile money upon delivery." },
     { q: "Is there a delivery fee?", a: "Fees depend on your distance from the restaurant." }
   ];
 

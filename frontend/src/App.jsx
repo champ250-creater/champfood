@@ -6,7 +6,8 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FoodDetails from './pages/FoodDetails';
-import FAQ from './pages/FAQ'; // ✅ Added this
+import FAQ from './pages/FAQ'; // ✅ Ready
+import Terms from './pages/Terms'; // ✅ Ready
 import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Orders from './pages/Orders';
@@ -24,8 +25,9 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/food/:id" element={<FoodDetails />} />
             
-            {/* ✅ New FAQ Route - Publicly accessible */}
+            {/* ✅ Added the two pages you have created */}
             <Route path="/faq" element={<FAQ />} />
+            <Route path="/terms" element={<Terms />} />
 
             <Route
               path="/cart"
@@ -51,7 +53,6 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            {/* Catch-all route must stay at the very bottom */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
