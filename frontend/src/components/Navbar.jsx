@@ -49,7 +49,7 @@ export default function Navbar() {
               <span className="text-white font-bold text-lg">C</span>
             </div>
             <span className="font-extrabold text-2xl tracking-tight text-gray-800">
-              CHAMP<span className="text-red-500">FOOD</span>
+              NZAN<span className="text-red-500">IRA</span>
             </span>
           </Link>
 
