@@ -2,7 +2,8 @@ import pool from '../config/database.js';
 
 class OrderService {
   // Create order
-  static async createOrder(userId, items, totalPrice) {
+  // NEW: Added deliveryLocation to the parameters
+  static async createOrder(userId, items, totalPrice, deliveryLocation) {
     try {
       // Start transaction
       const client = await pool.connect();
@@ -11,9 +12,10 @@ class OrderService {
         await client.query('BEGIN');
 
         // Create order
+        // NEW: Added delivery_location to the INSERT statement and $4 to the values
         const orderResult = await client.query(
-          'INSERT INTO orders (user_id, total_price, status) VALUES ($1, $2, $3) RETURNING *',
-          [userId, totalPrice, 'pending']
+          'INSERT INTO orders (user_id, total_price, status, delivery_location) VALUES ($1, $2, $3, $4) RETURNING *',
+          [userId, totalPrice, 'pending', deliveryLocation]
         );
 
         const order = orderResult.rows[0];

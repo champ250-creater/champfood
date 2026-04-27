@@ -4,7 +4,8 @@ class OrderController {
   static async createOrder(req, res, next) {
     try {
       const userId = req.user.userId;
-      const { items, totalPrice } = req.body;
+      // NEW: Catching deliveryLocation from req.body
+      const { items, totalPrice, deliveryLocation } = req.body;
 
       if (!items || items.length === 0) {
         return res.status(400).json({
@@ -20,7 +21,16 @@ class OrderController {
         });
       }
 
-      const order = await OrderService.createOrder(userId, items, totalPrice);
+      // NEW: Make sure they actually sent a location
+      if (!deliveryLocation) {
+        return res.status(400).json({
+          success: false,
+          message: 'Delivery location is required',
+        });
+      }
+
+      // NEW: Pass deliveryLocation down to your database service
+      const order = await OrderService.createOrder(userId, items, totalPrice, deliveryLocation);
 
       res.status(201).json({
         success: true,
