@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { getStoredUser, clearAuth } from '../utils/helpers';
@@ -7,6 +7,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation(); // ADDED: This tracks what page you are on!
 
   // This function syncs the user state with local storage
   const updateUser = () => {
@@ -14,10 +15,13 @@ export default function Navbar() {
     setUser(storedUser);
   };
 
+  // FIXED: Now we check Local Storage every time the route changes!
   useEffect(() => {
     updateUser();
-    
-    // Listen for storage changes (handles login/logout in other tabs)
+  }, [location.pathname]); 
+
+  // Keep the storage listener just in case you open multiple tabs
+  useEffect(() => {
     window.addEventListener('storage', updateUser);
     return () => window.removeEventListener('storage', updateUser);
   }, []);
@@ -73,10 +77,10 @@ export default function Navbar() {
                 {/* User Profile Badge */}
                 <div className="flex items-center gap-2 bg-orange-50 border border-orange-100 px-3 py-1.5 rounded-full shadow-sm">
                   <div className="w-7 h-7 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold uppercase ring-2 ring-white">
-                    {user.name.charAt(0)}
+                    {user.name ? user.name.charAt(0) : 'U'}
                   </div>
                   <span className="text-sm font-bold text-gray-700 hidden sm:inline">
-                    {user.name.split(' ')[0]}
+                    {user.name ? user.name.split(' ')[0] : 'User'}
                   </span>
                 </div>
                 
