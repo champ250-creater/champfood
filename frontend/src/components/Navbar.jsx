@@ -46,7 +46,7 @@ export default function Navbar() {
           {/* Logo & Branding */}
           <Link to="/" className="flex items-center gap-2 group">
             <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
-              <span className="text-white font-bold text-lg">C</span>
+              <span className="text-white font-bold text-lg">N</span>
             </div>
             <span className="font-extrabold text-2xl tracking-tight text-gray-800">
               NZAN<span className="text-red-500">IRA</span>
