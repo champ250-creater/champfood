@@ -9,6 +9,10 @@ export default function Order() {
   const navigate = useNavigate();
   const [isPlacing, setIsPlacing] = useState(false);
   const [orderId, setOrderId] = useState(null);
+  
+  // NEW: State to hold the delivery location
+  const [deliveryLocation, setDeliveryLocation] = useState('');
+  const [locationError, setLocationError] = useState('');
 
   const orderData = location.state || {
     items: [],
@@ -35,11 +39,20 @@ export default function Order() {
   }
 
   const handlePlaceOrder = async () => {
+    // NEW: Don't let them order if they didn't type an address!
+    if (!deliveryLocation.trim()) {
+      setLocationError('Please enter your delivery location.');
+      return;
+    }
+    setLocationError('');
+
     try {
       setIsPlacing(true);
+      // NEW: Added deliveryLocation as the 3rd piece of data to send to the backend
       const response = await orderService.createOrder(
         orderData.items,
-        orderData.total
+        orderData.total,
+        deliveryLocation 
       );
       setOrderId(response.data.data.id);
     } catch (err) {
@@ -51,10 +64,12 @@ export default function Order() {
 
   const handleOrderViaWhatsApp = () => {
     const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER || '250798880004';
+    // NEW: Passed deliveryLocation to the WhatsApp formatter
     const message = formatOrderForWhatsApp(
       orderData.items,
       orderData.total,
-      orderId
+      orderId,
+      deliveryLocation
     );
     const url = generateWhatsAppURL(whatsappNumber, message);
     window.open(url, '_blank');
@@ -79,7 +94,8 @@ export default function Order() {
 
             <h1 className="text-3xl font-bold text-dark mb-4">Order Created!</h1>
             <p className="text-gray-600 mb-6">
-              Order ID: <span className="font-bold text-primary">#{orderId}</span>
+              Order ID: <span className="font-bold text-primary">#{orderId}</span><br/>
+              Delivering to: <span className="font-bold">{deliveryLocation}</span>
             </p>
 
             <div className="bg-light p-6 rounded-lg mb-8">
@@ -111,10 +127,6 @@ export default function Order() {
             >
               Continue Shopping
             </button>
-
-            <p className="text-gray-600 text-sm mt-6">
-              Click the WhatsApp button to complete your order. Our team will confirm your order shortly.
-            </p>
           </motion.div>
         </div>
       </div>
@@ -164,25 +176,36 @@ export default function Order() {
                 <span>Delivery</span>
                 <span>{formatPrice(orderData.delivery)}</span>
               </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span>{formatPrice(orderData.tax)}</span>
-              </div>
-              <div className="border-t pt-3 flex justify-between font-bold text-lg">
+              <div className="flex justify-between font-bold text-lg border-t pt-3">
                 <span>Total</span>
                 <span className="text-primary">{formatPrice(orderData.total)}</span>
               </div>
             </div>
           </div>
 
-          {/* Delivery Address */}
+          {/* NEW: Delivery Address Input */}
           <div className="mb-8 p-6 border-2 border-gray-200 rounded-lg">
             <h3 className="font-bold text-dark mb-4">Delivery Details</h3>
-            <p className="text-gray-600 mb-2">
-              We'll share your WhatsApp contact with our delivery partner.
-            </p>
-            <p className="text-sm text-gray-500">
-              Make sure your WhatsApp number is correct in your profile.
+            
+            <div className="mb-4">
+              <label className="block text-gray-700 font-semibold mb-2">Delivery Location *</label>
+              <input
+                type="text"
+                value={deliveryLocation}
+                onChange={(e) => {
+                  setDeliveryLocation(e.target.value);
+                  if (locationError) setLocationError('');
+                }}
+                placeholder="e.g., KK 509 St, Kicukiro"
+                className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none transition ${
+                  locationError ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
+                }`}
+              />
+              {locationError && <p className="text-red-500 text-sm mt-1">{locationError}</p>}
+            </div>
+
+            <p className="text-gray-600 text-sm">
+              We'll share your location and WhatsApp contact with our delivery partner.
             </p>
           </div>
 
@@ -206,9 +229,6 @@ export default function Order() {
             </button>
           </div>
 
-          <p className="text-gray-600 text-center text-sm mt-6">
-            ℹ️ After placing the order, you'll be redirected to WhatsApp to confirm payment details.
-          </p>
         </motion.div>
       </div>
     </div>

@@ -30,9 +30,15 @@ export const generateWhatsAppURL = (phoneNumber, orderDetails) => {
   return `https://wa.me/${phoneNumber}?text=${message}`;
 };
 
-// Format order details for WhatsApp - Updated for RWF
-export const formatOrderForWhatsApp = (items, totalPrice, orderId) => {
+// Format order details for WhatsApp - Updated for RWF and Location
+export const formatOrderForWhatsApp = (items, totalPrice, orderId, location) => {
   let message = `*champfood #${orderId}*\n\n`;
+  
+  // NEW: Added the delivery location to the message
+  if (location) {
+    message += `*📍 Delivery Location:*\n${location}\n\n`;
+  }
+
   message += `*Order Details:*\n`;
   
   items.forEach((item) => {

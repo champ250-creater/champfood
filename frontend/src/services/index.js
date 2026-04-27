@@ -30,8 +30,9 @@ export const cartService = {
 
 // Order APIs
 export const orderService = {
-  createOrder: (items, totalPrice) =>
-    apiClient.post('/orders', { items, totalPrice }),
+  // NEW: Added deliveryLocation so it travels to your Render backend!
+  createOrder: (items, totalPrice, deliveryLocation) =>
+    apiClient.post('/orders', { items, totalPrice, deliveryLocation }),
   getOrders: () => apiClient.get('/orders'),
   getOrderById: (id) => apiClient.get(`/orders/${id}`),
 };
