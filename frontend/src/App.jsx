@@ -6,8 +6,9 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import FoodDetails from './pages/FoodDetails';
-import FAQ from './pages/FAQ'; // ✅ Ready
-import Terms from './pages/Terms'; // ✅ Ready
+import FAQ from './pages/FAQ'; 
+import Terms from './pages/Terms'; 
+import Privacy from './pages/Privacy'; // ✅ Now this file exists!
 import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Orders from './pages/Orders';
@@ -25,9 +26,10 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/food/:id" element={<FoodDetails />} />
             
-            {/* ✅ Added the two pages you have created */}
+            {/* Support Pages */}
             <Route path="/faq" element={<FAQ />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
 
             <Route
               path="/cart"
