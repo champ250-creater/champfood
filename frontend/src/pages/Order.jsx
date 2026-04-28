@@ -26,12 +26,12 @@ export default function Order() {
     return (
       <div className="min-h-screen bg-light flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-dark mb-4">No items to order</h1>
+          <h1 className="text-2xl font-bold text-dark mb-4">Nta bintu byo gutumiza</h1>
           <button
             onClick={() => navigate('/cart')}
             className="bg-primary text-white px-8 py-3 rounded-lg font-semibold"
           >
-            Back to Cart
+            Subira mu igare
           </button>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default function Order() {
   // GPS Location Function with FIXED Google Maps Link
   const handleGetLocation = () => {
     if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported by your browser.');
+      setLocationError('Aho ikoranabuhanga riherereye ntabwo rishyigikiwe na porogaramu yawe yo gushakisha amakuru.');
       return;
     }
 
@@ -58,7 +58,7 @@ export default function Order() {
       },
       (error) => {
         console.error("Error getting location:", error);
-        setLocationError('Unable to get location. Please type it manually or check your browser permissions.');
+        setLocationError("Ntibyakunze kubona aho uherereye. Gerageza kongera cyangwa andika aderesi yawe mu buryo bw'intoki.");
         setIsGettingLocation(false);
       },
       { enableHighAccuracy: true }
