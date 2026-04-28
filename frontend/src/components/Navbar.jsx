@@ -1,26 +1,23 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { getStoredUser, clearAuth } from '../utils/helpers';
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // ADDED: This tracks what page you are on!
+  const location = useLocation();
 
-  // This function syncs the user state with local storage
   const updateUser = () => {
     const storedUser = getStoredUser();
     setUser(storedUser);
   };
 
-  // FIXED: Now we check Local Storage every time the route changes!
   useEffect(() => {
     updateUser();
   }, [location.pathname]); 
 
-  // Keep the storage listener just in case you open multiple tabs
   useEffect(() => {
     window.addEventListener('storage', updateUser);
     return () => window.removeEventListener('storage', updateUser);
@@ -37,34 +34,35 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="sticky top-0 z-50 bg-white shadow-md border-b border-gray-100"
+      transition={{ type: "spring", stiffness: 100, damping: 20 }}
+      // Upgraded to Glassmorphism to match the Pro forms
+      className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm border-b border-slate-200/50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           
-          {/* Logo & Branding */}
+          {/* Logo & Branding - Updated to Teal/Indigo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-red-600 rounded-lg flex items-center justify-center shadow-lg group-hover:rotate-6 transition-transform">
-              <span className="text-white font-bold text-lg">N</span>
+            <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-[0_4px_10px_rgba(20,184,166,0.3)] group-hover:rotate-6 transition-transform duration-300">
+              <span className="text-white font-extrabold text-lg">N</span>
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-gray-800">
-              NZAN<span className="text-red-500">IRA</span>
+            <span className="font-extrabold text-2xl tracking-tight text-slate-800">
+              NZAN<span className="text-teal-500">IRA</span>
             </span>
           </Link>
 
           {/* Desktop Navigation Links */}
           <div className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-gray-600 font-medium hover:text-orange-500 transition-colors">
-              Home
+            <Link to="/" className="text-slate-600 font-bold hover:text-teal-600 transition-colors duration-300">
+              Ahabanza
             </Link>
             {user && (
               <>
-                <Link to="/cart" className="text-gray-600 font-medium hover:text-orange-500 transition-colors">
-                  Cart
+                <Link to="/cart" className="text-slate-600 font-bold hover:text-teal-600 transition-colors duration-300">
+                  Ikarita
                 </Link>
-                <Link to="/orders" className="text-gray-600 font-medium hover:text-orange-500 transition-colors">
-                  My Orders
+                <Link to="/orders" className="text-slate-600 font-bold hover:text-teal-600 transition-colors duration-300">
+                  Ibyo natumije
                 </Link>
               </>
             )}
@@ -75,11 +73,11 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-3 sm:gap-6">
                 {/* User Profile Badge */}
-                <div className="flex items-center gap-2 bg-orange-50 border border-orange-100 px-3 py-1.5 rounded-full shadow-sm">
-                  <div className="w-7 h-7 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold uppercase ring-2 ring-white">
+                <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-3 py-1.5 rounded-full shadow-sm">
+                  <div className="w-7 h-7 bg-gradient-to-r from-teal-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-xs font-bold uppercase ring-2 ring-white">
                     {user.name ? user.name.charAt(0) : 'U'}
                   </div>
-                  <span className="text-sm font-bold text-gray-700 hidden sm:inline">
+                  <span className="text-sm font-bold text-slate-700 hidden sm:inline">
                     {user.name ? user.name.split(' ')[0] : 'User'}
                   </span>
                 </div>
@@ -87,24 +85,26 @@ export default function Navbar() {
                 {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 border border-transparent hover:border-red-200"
+                  className="bg-transparent hover:bg-red-50 text-slate-500 hover:text-red-600 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 border border-transparent hover:border-red-100"
                 >
-                  Logout
+                  Sohoka
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
+                {/* Translated Login -> Injira */}
                 <Link
                   to="/login"
-                  className="text-gray-700 font-semibold px-4 py-2 hover:text-orange-500 transition-colors"
+                  className="text-slate-600 font-bold px-4 py-2 hover:text-teal-600 transition-colors duration-300"
                 >
-                  Login
+                  Injira
                 </Link>
+                {/* Translated Sign Up -> Iyandikishe */}
                 <Link
                   to="/signup"
-                  className="bg-orange-500 text-white px-5 py-2 rounded-lg font-bold shadow-md hover:bg-orange-600 transition-all hover:scale-105 active:scale-95"
+                  className="bg-gradient-to-r from-teal-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-[0_4px_14px_0_rgba(20,184,166,0.3)] hover:shadow-[0_6px_20px_rgba(20,184,166,0.2)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
                 >
-                  Sign Up
+                  Iyandikishe
                 </Link>
               </div>
             )}
@@ -112,13 +112,13 @@ export default function Navbar() {
             {/* Mobile Menu Toggle */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+              className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-teal-600 transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
                 ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16m-7 6h7" />
                 )}
               </svg>
             </button>
@@ -126,39 +126,42 @@ export default function Navbar() {
         </div>
 
         {/* Mobile Dropdown Menu */}
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="md:hidden border-t border-gray-100 py-4 space-y-2"
-          >
-            <Link 
-              to="/" 
-              onClick={() => setIsMenuOpen(false)}
-              className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 font-medium rounded-lg"
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-slate-100 py-4 space-y-2 overflow-hidden"
             >
-              Home
-            </Link>
-            {user && (
-              <>
-                <Link 
-                  to="/cart" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 font-medium rounded-lg"
-                >
-                  Cart
-                </Link>
-                <Link 
-                  to="/orders" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="block px-4 py-2 text-gray-700 hover:bg-orange-50 hover:text-orange-600 font-medium rounded-lg"
-                >
-                  My Orders
-                </Link>
-              </>
-            )}
-          </motion.div>
-        )}
+              <Link 
+                to="/" 
+                onClick={() => setIsMenuOpen(false)}
+                className="block px-4 py-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-700 font-bold rounded-lg transition-colors"
+              >
+                Ahabanza
+              </Link>
+              {user && (
+                <>
+                  <Link 
+                    to="/cart" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-4 py-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-700 font-bold rounded-lg transition-colors"
+                  >
+                    Ikarita
+                  </Link>
+                  <Link 
+                    to="/orders" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-4 py-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-700 font-bold rounded-lg transition-colors"
+                  >
+                    Ibyo natumije
+                  </Link>
+                </>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.nav>
   );
