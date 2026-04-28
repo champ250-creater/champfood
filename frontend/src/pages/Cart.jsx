@@ -102,8 +102,8 @@ export default function Cart() {
   }
 
   const total = calculateTotal();
-  const deliveryFee = 500.99;
-  const tax = total * 0.5;
+  const deliveryFee = 100.99;
+  const tax = total * 0.1;
   const finalTotal = total + deliveryFee + tax;
 
   return (
