@@ -19,25 +19,25 @@ export default function Signup() {
     setLoading(true);
 
     if (!name) {
-      setError('Name is required');
+      setError('izina rirakenewe');
       setLoading(false);
       return;
     }
 
     if (!validateEmail(email)) {
-      setError('Please enter a valid email');
+      setError('Tanga email ikora neza.');
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Ijambobanga rigomba kuba nibura inyuguti 6');
       setLoading(false);
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Amagambo y\'ibanga ntahuye');
       setLoading(false);
       return;
     }
@@ -48,7 +48,7 @@ export default function Signup() {
       storeAuthToken(response.data.data.token, response.data.data.user);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Signup failed');
+      setError(err.response?.data?.message || 'Kwiyandikisha byanze gerageza kongera.');
     } finally {
       setLoading(false);
     }
@@ -61,8 +61,8 @@ export default function Signup() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
       >
-        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Join NZANIRA</h1>
-        <p className="text-center text-gray-600 mb-8">Create an account and start ordering</p>
+        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Injira NZANIRA</h1>
+        <p className="text-center text-gray-600 mb-8">Kora konti hanyuma utangire gutumiza</p>
 
         {error && (
           <motion.div
@@ -93,12 +93,12 @@ export default function Signup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition"
-              placeholder="your@email.com"
+              placeholder="andikaemail yawe@email.com"
             />
           </div>
 
           <div>
-            <label className="block text-dark font-semibold mb-2">Password</label>
+            <label className="block text-dark font-semibold mb-2">IJAMBOBANGA</label>
             <input
               type="password"
               value={password}
@@ -109,7 +109,7 @@ export default function Signup() {
           </div>
 
           <div>
-            <label className="block text-dark font-semibold mb-2">Confirm Password</label>
+            <label className="block text-dark font-semibold mb-2">Emeza ijambo banga</label>
             <input
               type="password"
               value={confirmPassword}
@@ -126,12 +126,12 @@ export default function Signup() {
             disabled={loading}
             className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50"
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? 'Kurema konti...' : 'IYANDIKISHE'}
           </motion.button>
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Already have an account?{' '}
+          Umaze kugira konti?{' '}
           <Link to="/login" className="text-primary font-bold hover:underline">
             Login
           </Link>
