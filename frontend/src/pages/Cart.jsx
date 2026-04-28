@@ -82,7 +82,7 @@ export default function Cart() {
         <div className="max-w-4xl mx-auto">
           <EmptyState
             title="Your Cart is Empty"
-            description="Add some delicious food to your cart and start ordering!"
+            description="Shyiramo ibiryo biryoshye mu igare ryawe hanyuma utangire gutumiza!"
             icon="🛒"
           />
           <div className="text-center mt-8">
@@ -90,7 +90,7 @@ export default function Cart() {
               onClick={() => navigate('/')}
               className="bg-gradient-to-r from-primary to-accent text-white font-bold px-8 py-3 rounded-lg hover:shadow-lg transition duration-300"
             >
-              Continue Shopping
+              Komeza guhaha
             </button>
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function Cart() {
               onClick={() => navigate('/')}
               className="w-full mt-3 border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-light transition duration-300"
             >
-              Continue Shopping
+              komeza kugura  
             </button>
           </motion.div>
         </div>

@@ -14,7 +14,7 @@ export default function Footer() {
           <div>
             <h4 className="font-bold mb-4 uppercase">About NZANIRA</h4>
             <p className="text-gray-400 text-sm">
-              Your favorite food ordering platform delivering delicious meals to your doorstep in Kigali.
+              Urubuga rwawe ukunda rwo gutumiza ibiryo rukugezaho amafunguro aryoshye iwawe.
             </p>
           </div>
 
