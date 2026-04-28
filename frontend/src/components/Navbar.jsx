@@ -59,7 +59,7 @@ export default function Navbar() {
             {user && (
               <>
                 <Link to="/cart" className="text-slate-600 font-bold hover:text-teal-600 transition-colors duration-300">
-                  Ikarita
+                  IBYATORANYIJWE
                 </Link>
                 <Link to="/orders" className="text-slate-600 font-bold hover:text-teal-600 transition-colors duration-300">
                   Ibyo natumije
@@ -148,7 +148,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="block px-4 py-2.5 text-slate-600 hover:bg-teal-50 hover:text-teal-700 font-bold rounded-lg transition-colors"
                   >
-                    Ikarita
+                    IBYATORANYIJWE
                   </Link>
                   <Link 
                     to="/orders" 
