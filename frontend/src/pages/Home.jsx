@@ -5,6 +5,39 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 import { foodService } from '../services';
 
+// --- NEW COMPONENT FOR THE ANIMATED STATS ---
+const StatItem = ({ target, label, suffix = "" }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = parseInt(target);
+    const duration = 2000; // 2 seconds to finish
+    const incrementTime = duration / end;
+
+    const timer = setInterval(() => {
+      start += 1;
+      setCount(start);
+      if (start === end) clearInterval(timer);
+    }, incrementTime);
+
+    return () => clearInterval(timer);
+  }, [target]);
+
+  return (
+    <div className="flex flex-col items-center">
+      <motion.div 
+        animate={{ color: ["#10b981", "#3b82f6", "#f97316", "#10b981"] }}
+        transition={{ duration: 4, repeat: Infinity }}
+        className="text-4xl md:text-5xl font-bold mb-2"
+      >
+        {count}{suffix}
+      </motion.div>
+      <p className="text-gray-400 font-medium tracking-wide">{label}</p>
+    </div>
+  );
+};
+
 export default function Home() {
   const [foods, setFoods] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -113,25 +146,17 @@ export default function Home() {
         )}
       </div>
 
-      {/* Stats Section */}
+      {/* NEW ANIMATED Stats Section */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
-        className="bg-dark text-white py-16 px-4"
+        viewport={{ once: true }}
+        className="bg-dark text-white py-20 px-4 border-t border-gray-900"
       >
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-          <div>
-            <div className="text-4xl font-bold text-primary mb-2">2+</div>
-            <p>Restaurant Partners</p>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-accent mb-2">5+</div>
-            <p>Happy Customers</p>
-          </div>
-          <div>
-            <div className="text-4xl font-bold text-primary mb-2">30 min</div>
-            <p>Average Delivery Time</p>
-          </div>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
+          <StatItem target="2" label="Restaurant Partners" suffix="+" />
+          <StatItem target="5" label="Happy Customers" suffix="+" />
+          <StatItem target="30" label="Average Delivery Time" suffix=" min" />
         </div>
       </motion.div>
     </div>
