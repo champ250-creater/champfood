@@ -154,8 +154,8 @@ export default function Home() {
         className="bg-dark text-white py-20 px-4 border-t border-gray-900"
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
-          <StatItem target="2" label="Restaurant Partners" suffix="+" />
-          <StatItem target="5" label="Happy Customers" suffix="+" />
+          <StatItem target="1" label="Restaurant Partners" suffix="+" />
+          <StatItem target="500" label="Happy Customers" suffix="+" />
           <StatItem target="30" label="Average Delivery Time" suffix=" min" />
         </div>
       </motion.div>
