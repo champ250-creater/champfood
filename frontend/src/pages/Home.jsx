@@ -79,10 +79,10 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Order Your Favorite Food
+            Tuma ibiryo ukunda cyane
           </h1>
           <p className="text-lg md:text-xl mb-8 opacity-90">
-            Fast delivery, fresh meals, and great prices
+            Gutanga byihuse, amafunguro mashya, n'ibiciro byiza
           </p>
 
           {/* Search Bar */}
@@ -92,7 +92,7 @@ export default function Home() {
           >
             <input
               type="text"
-              placeholder="Search for food, restaurants..."
+              placeholder="Shaka ibiryo, n'resitora..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="flex-1 px-6 py-4 rounded-l-lg text-dark focus:outline-none"
@@ -119,13 +119,13 @@ export default function Home() {
         {filteredFoods.length === 0 ? (
           <EmptyState
             title="No Foods Found"
-            description="We couldn't find any foods matching your search. Try a different search term."
+            description="Nta biribwa twabonye bihuye n'ibyo washakaga. Gerageza irindi jambo ryo gushakisha."
             icon="🍽️"
           />
         ) : (
           <>
             <h2 className="text-3xl font-bold text-dark mb-8">
-              {searchTerm ? `Search Results (${filteredFoods.length})` : 'Popular Foods'}
+              {searchTerm ? `Search Results (${filteredFoods.length})` : 'IBIRYO Bikunzwe'}
             </h2>
             <motion.div
               layout
