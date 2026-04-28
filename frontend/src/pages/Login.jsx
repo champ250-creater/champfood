@@ -17,13 +17,13 @@ export default function Login() {
     setLoading(true);
 
     if (!validateEmail(email)) {
-      setError('Please enter a valid email');
+      setError('Tanga email reroshobora gukoreshwa.');
       setLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError('Password must be at least 6 characters');
+      setError('Ijambobanga rigomba kuba nibura inyuguti 6');
       setLoading(false);
       return;
     }
@@ -34,7 +34,7 @@ export default function Login() {
       storeAuthToken(response.data.data.token, response.data.data.user);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      setError(err.response?.data?.message || 'Kwinjira byanze Gerageza kongera.');
     } finally {
       setLoading(false);
     }
@@ -47,8 +47,8 @@ export default function Login() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
       >
-        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Welcome Back</h1>
-        <p className="text-center text-gray-600 mb-8">Login to FoodHub and start ordering</p>
+        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Murakaza neza</h1>
+        <p className="text-center text-gray-600 mb-8">Injira muri nzanira utangire gutumiza</p>
 
         {error && (
           <motion.div
@@ -95,7 +95,7 @@ export default function Login() {
         </form>
 
         <p className="text-center mt-6 text-gray-600">
-          Don't have an account?{' '}
+          Ntabwo ufite konti?{' '}
           <Link to="/signup" className="text-primary font-bold hover:underline">
             Sign Up
           </Link>

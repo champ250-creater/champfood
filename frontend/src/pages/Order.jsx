@@ -67,7 +67,7 @@ export default function Order() {
 
   const handlePlaceOrder = async () => {
     if (!deliveryLocation.trim()) {
-      setLocationError('Please provide your delivery location.');
+      setLocationError('Tanga aho uzageza ibicuruzwa byawe.');
       return;
     }
     setLocationError('');
@@ -141,7 +141,7 @@ export default function Order() {
               onClick={handleOrderViaWhatsApp}
               className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 mb-4 flex items-center justify-center gap-2"
             >
-              <span>📱 Order via WhatsApp</span>
+              <span>📱Gutumiza ukoresheje WhatsApp</span>
             </motion.button>
 
             <button
