@@ -12,7 +12,7 @@ const StatItem = ({ target, label, suffix = "" }) => {
   useEffect(() => {
     let start = 0;
     const end = parseInt(target);
-    const duration = 2000; // 2 seconds to finish
+    const duration = 60000; // 60 seconds to finish
     const incrementTime = duration / end;
 
     const timer = setInterval(() => {
