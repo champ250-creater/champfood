@@ -5,14 +5,13 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import EmptyState from '../components/EmptyState';
 import { foodService } from '../services';
 
-// --- NEW COMPONENT FOR THE ANIMATED STATS ---
 const StatItem = ({ target, label, suffix = "" }) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
     let start = 0;
     const end = parseInt(target);
-    const duration = 60000; // 60 seconds to finish
+    const duration = 60000; 
     const incrementTime = duration / end;
 
     const timer = setInterval(() => {
@@ -70,7 +69,9 @@ export default function Home() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    <div className="min-h-screen bg-light">
+    // ADDED dark:bg-slate-900 here!
+    <div className="min-h-screen bg-light dark:bg-slate-900 transition-colors duration-300">
+      
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -50 }}
@@ -85,11 +86,7 @@ export default function Home() {
             Gutanga byihuse, amafunguro mashya, n'ibiciro byiza
           </p>
 
-          {/* Search Bar */}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="flex max-w-2xl mx-auto"
-          >
+          <motion.div whileHover={{ scale: 1.05 }} className="flex max-w-2xl mx-auto">
             <input
               type="text"
               placeholder="Shaka ibiryo, n'resitora..."
@@ -107,11 +104,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-red-100 text-red-700 p-4 rounded-lg mb-8"
-          >
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-100 text-red-700 p-4 rounded-lg mb-8">
             {error}
           </motion.div>
         )}
@@ -124,13 +117,11 @@ export default function Home() {
           />
         ) : (
           <>
-            <h2 className="text-3xl font-bold text-dark mb-8">
+            {/* ADDED dark:text-white here! */}
+            <h2 className="text-3xl font-bold text-dark dark:text-white mb-8 transition-colors duration-300">
               {searchTerm ? `Search Results (${filteredFoods.length})` : 'IBIRYO Bikunzwe'}
             </h2>
-            <motion.div
-              layout
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
-            >
+            <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {filteredFoods.map((food, index) => (
                 <motion.div
                   key={food.id}
@@ -146,7 +137,7 @@ export default function Home() {
         )}
       </div>
 
-      {/* NEW ANIMATED Stats Section */}
+      {/* Stats Section */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
