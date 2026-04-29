@@ -52,7 +52,7 @@ export default function Order() {
       (position) => {
         const { latitude, longitude } = position.coords;
         // FIXED: Generates a proper, clickable Google Maps pin
-        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
+        const mapsLink = `https://www.google.com/maps?q=$${latitude},${longitude}`;
         setDeliveryLocation(mapsLink);
         setIsGettingLocation(false);
       },
@@ -82,7 +82,7 @@ export default function Order() {
       setOrderId(response.data.data.id);
     } catch (err) {
       console.error(err);
-      alert('Failed to create order');
+      alert('Ntibyakunze gukora komande');
       setIsPlacing(false);
     }
   };
@@ -116,13 +116,13 @@ export default function Order() {
               ✓
             </motion.div>
 
-            <h1 className="text-3xl font-bold text-dark mb-4">Order Created!</h1>
+            <h1 className="text-3xl font-bold text-dark mb-4">Komande Yakozwe!</h1>
             <p className="text-gray-600 mb-6">
-              Order ID: <span className="font-bold text-primary">#{orderId}</span>
+              Inomero ya komande: <span className="font-bold text-primary">#{orderId}</span>
             </p>
 
             <div className="bg-light p-6 rounded-lg mb-8">
-              <h2 className="font-bold text-lg text-dark mb-4">Order Details</h2>
+              <h2 className="font-bold text-lg text-dark mb-4">Ibisobanuro bya Komande</h2>
               {orderData.items.map((item) => (
                 <div key={item.id} className="flex justify-between mb-2 text-sm">
                   <span>{item.name} x{item.quantity}</span>
@@ -130,7 +130,7 @@ export default function Order() {
                 </div>
               ))}
               <div className="border-t mt-4 pt-4 flex justify-between font-bold">
-                <span>Total</span>
+                <span>Igiteranyo</span>
                 <span className="text-primary">{formatPrice(orderData.total)}</span>
               </div>
             </div>
@@ -141,14 +141,14 @@ export default function Order() {
               onClick={handleOrderViaWhatsApp}
               className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 mb-4 flex items-center justify-center gap-2"
             >
-              <span>📱Gutumiza ukoresheje WhatsApp</span>
+              <span>📱 Gutumiza ukoresheje WhatsApp</span>
             </motion.button>
 
             <button
               onClick={() => navigate('/')}
               className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-light transition duration-300"
             >
-              Continue Shopping
+              Komeza guhaha
             </button>
           </motion.div>
         </div>
@@ -164,7 +164,7 @@ export default function Order() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-white rounded-2xl shadow-xl p-8"
         >
-          <h1 className="text-3xl font-bold text-dark mb-8">Review Your Order</h1>
+          <h1 className="text-3xl font-bold text-dark mb-8">Reba Komande Yawe</h1>
 
           {/* Order Items */}
           <div className="space-y-4 mb-8">
@@ -178,7 +178,7 @@ export default function Order() {
                 <div>
                   <h3 className="font-bold text-dark">{item.name}</h3>
                   <p className="text-gray-600 text-sm">
-                    Quantity: {item.quantity}
+                    Umubare: {item.quantity}
                   </p>
                 </div>
                 <span className="font-bold text-primary">
@@ -192,15 +192,15 @@ export default function Order() {
           <div className="bg-light p-6 rounded-lg mb-8">
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span>Subtotal</span>
+                <span>Igiteranyo gito</span>
                 <span>{formatPrice(orderData.subtotal)}</span>
               </div>
               <div className="flex justify-between">
-                <span>Delivery</span>
+                <span>Kugeza aho uri</span>
                 <span>{formatPrice(orderData.delivery)}</span>
               </div>
               <div className="flex justify-between font-bold text-lg border-t pt-3">
-                <span>Total</span>
+                <span>Igiteranyo cyose</span>
                 <span className="text-primary">{formatPrice(orderData.total)}</span>
               </div>
             </div>
@@ -208,10 +208,10 @@ export default function Order() {
 
           {/* Delivery Address Input */}
           <div className="mb-8 p-6 border-2 border-gray-200 rounded-lg">
-            <h3 className="font-bold text-dark mb-4">Delivery Details</h3>
+            <h3 className="font-bold text-dark mb-4">Aho Kugezwa</h3>
             
             <div className="mb-4">
-              <label className="block text-gray-700 font-semibold mb-2">Delivery Location *</label>
+              <label className="block text-gray-700 font-semibold mb-2">Aderesi *</label>
               
               <button
                 type="button"
@@ -219,12 +219,12 @@ export default function Order() {
                 disabled={isGettingLocation}
                 className="mb-3 w-full bg-blue-50 text-blue-600 border border-blue-200 font-semibold py-2 px-4 rounded-lg hover:bg-blue-100 transition flex items-center justify-center gap-2"
               >
-                {isGettingLocation ? '⏳ Fetching GPS...' : '📍 Use My Current Location'}
+                {isGettingLocation ? '⏳ Gushaka GPS...' : '📍 Koresha aho mperereye ubu'}
               </button>
 
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-                  OR
+                  CYANGWA
                 </div>
                 <input
                   type="text"
@@ -233,8 +233,8 @@ export default function Order() {
                     setDeliveryLocation(e.target.value);
                     if (locationError) setLocationError('');
                   }}
-                  placeholder="Type address manually..."
-                  className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none transition ${
+                  placeholder="Andika aderesi..."
+                  className={`w-full pl-24 pr-4 py-3 border-2 rounded-lg focus:outline-none transition ${
                     locationError ? 'border-red-500 focus:border-red-500' : 'border-gray-200 focus:border-primary'
                   }`}
                 />
@@ -243,7 +243,7 @@ export default function Order() {
             </div>
 
             <p className="text-gray-600 text-sm">
-              We'll share your location and WhatsApp contact with our delivery partner.
+              Tuzasangiza aderesi yawe na nimero ya WhatsApp ku muntu uzagushyikiriza ibicuruzwa.
             </p>
           </div>
 
@@ -256,14 +256,14 @@ export default function Order() {
               disabled={isPlacing}
               className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50"
             >
-              {isPlacing ? 'Creating Order...' : 'Place Order'}
+              {isPlacing ? 'Turi Gukora Komande...' : 'Emeza Komande'}
             </motion.button>
 
             <button
               onClick={() => navigate('/cart')}
               className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-light transition duration-300"
             >
-              Back to Cart
+              Subira mu igare
             </button>
           </div>
 

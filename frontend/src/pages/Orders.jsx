@@ -21,7 +21,7 @@ export default function Orders() {
       setOrders(response.data.data || []);
     } catch (err) {
       console.error(err);
-      setError('Failed to load orders');
+      setError('Ntibyakunze kuzana komande zawe');
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,10 @@ export default function Orders() {
     return (
       <div className="min-h-screen bg-light py-12 px-4">
         <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-dark mb-8">Your Orders</h1>
+          <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
           <EmptyState
-            title="No Orders Yet"
-            description="You haven't placed any orders yet. Start by browsing our delicious food menu!"
+            title="Nta Komande Urakora"
+            description="Nta komande n'imwe urakora kugeza ubu. Tangira ureba ibiryo byiza duteka mu isoko ryacu!"
             icon="📦"
           />
         </div>
@@ -47,7 +47,7 @@ export default function Orders() {
   return (
     <div className="min-h-screen bg-light py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-dark mb-8">Your Orders</h1>
+        <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
 
         {error && (
           <motion.div
@@ -71,7 +71,7 @@ export default function Orders() {
               <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
                 <div>
                   <h3 className="text-lg font-bold text-dark">
-                    Order #{order.id}
+                    Komande #{order.id}
                   </h3>
                   <p className="text-gray-600 text-sm">
                     {formatDate(order.createdAt)}
@@ -83,11 +83,15 @@ export default function Orders() {
                       order.status === 'completed'
                         ? 'bg-green-100 text-green-700'
                         : order.status === 'pending'
-                        ? 'bg-yellow-100 text-black-700'
+                        ? 'bg-yellow-100 text-yellow-700'
                         : 'bg-gray-100 text-gray-700'
                     }`}
                   >
-                    {order.status?.toUpperCase() || 'PENDING'}
+                    {order.status === 'completed' 
+                      ? 'YAKOZWE' 
+                      : order.status === 'pending' 
+                      ? 'ITEGEREJWE' 
+                      : order.status?.toUpperCase() || 'ITEGEREJWE'}
                   </span>
                   <span className="font-bold text-lg text-primary">
                     {formatPrice(order.totalPrice)}
@@ -97,7 +101,7 @@ export default function Orders() {
 
               {/* Order Items */}
               <div className="bg-light p-4 rounded-lg mb-4">
-                <h4 className="font-semibold text-dark mb-3">Items</h4>
+                <h4 className="font-semibold text-dark mb-3">Ibyo Watumije</h4>
                 <div className="space-y-2">
                   {order.items?.map((item) => (
                     <div
@@ -116,7 +120,7 @@ export default function Orders() {
               </div>
 
               <p className="text-gray-600 text-sm">
-                Delivery via WhatsApp - Check your messages for updates
+                Bizagezwa aho uri binyuze kuri WhatsApp - Reba ubutumwa bwawe ubashe gukurikirana aho bigeze
               </p>
             </motion.div>
           ))}
