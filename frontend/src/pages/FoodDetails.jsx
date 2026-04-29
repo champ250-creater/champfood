@@ -1,134 +1,174 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import LoadingSpinner from '../components/LoadingSpinner';
-import EmptyState from '../components/EmptyState';
-import { orderService } from '../services';
-import { formatPrice, formatDate } from '../utils/helpers';
+import { foodService, cartService } from '../services';
+import { formatPrice, getStoredUser } from '../utils/helpers';
 
-export default function Orders() {
-  const [orders, setOrders] = useState([]);
+export default function FoodDetails() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [food, setFood] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [message, setMessage] = useState('');
+  const user = getStoredUser();
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    fetchFood();
+  }, [id]);
 
-  const fetchOrders = async () => {
+  const fetchFood = async () => {
     try {
       setLoading(true);
-      const response = await orderService.getOrders();
-      setOrders(response.data.data || []);
+      const response = await foodService.getFoodById(id);
+      
+      // CRITICAL FIX: Ensure we are setting the actual food object, 
+      // regardless of how your backend nests the response.
+      const foodData = response.data?.data || response.data || response;
+      setFood(foodData);
+      
     } catch (err) {
       console.error(err);
-      setError('Ntibyakunze kuzana komande');
+      setMessage('Ntibyakunze kuzana ibisobanuro by\'ibiryo');
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <LoadingSpinner />;
+  const handleAddToCart = async () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
 
-  if (orders.length === 0) {
-    return (
-      <div className="min-h-screen bg-light py-12 px-4">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
-          <EmptyState
-            title="Nta Komande Urakora"
-            description="Nta komande n'imwe urakora kugeza ubu. Tangira ureba ibiryo byiza duteka mu isoko ryacu!"
-            icon="📦"
-          />
-        </div>
-      </div>
-    );
-  }
+    try {
+      setAddingToCart(true);
+      await cartService.addToCart(id, quantity);
+      setMessage('Byagiye mu igare! ✓');
+      setTimeout(() => {
+        navigate('/cart');
+      }, 1500);
+    } catch (err) {
+      setMessage('Ntibyakunze kubishyira mu igare');
+      console.error(err);
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
+  if (loading) return <LoadingSpinner />;
+  
+  // CRITICAL FIX: Prevent crash if food object is empty/undefined
+  if (!food || typeof food !== 'object') return <div className="text-center py-20">Ibiryo ntibibonetse</div>;
 
   return (
     <div className="min-h-screen bg-light py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
+        <motion.button
+          onClick={() => navigate('/')}
+          className="mb-6 text-primary font-semibold hover:underline"
+        >
+          ← Subira Ahabanza
+        </motion.button>
 
-        {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-red-100 text-red-700 p-4 rounded-lg mb-8"
-          >
-            {error}
-          </motion.div>
-        )}
-
-        <div className="space-y-6">
-          {orders.map((order, index) => (
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+            {/* Image */}
             <motion.div
-              key={order.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
             >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-dark">
-                    Komande #{order.id}
-                  </h3>
-                  <p className="text-gray-600 text-sm">
-                    {formatDate(order.createdAt)}
-                  </p>
-                </div>
-                <div className="flex items-center gap-4 mt-4 md:mt-0">
-                  <span
-                    className={`px-4 py-2 rounded-lg font-semibold text-sm ${
-                      order.status === 'completed'
-                        ? 'bg-green-100 text-green-700'
-                        : order.status === 'pending'
-                        ? 'bg-yellow-100 text-black-700'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}
-                  >
-                    {order.status?.toUpperCase() || 'ITEGEREJWE'}
-                  </span>
-                  <span className="font-bold text-lg text-primary">
-                    {formatPrice(order.totalPrice)}
-                  </span>
-                </div>
-              </div>
-
-              {/* Order Items */}
-              <div className="bg-light p-4 rounded-lg mb-4">
-                <h4 className="font-semibold text-dark mb-3">Ibyo Watumije</h4>
-                <div className="space-y-2">
-                  {order.items?.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between text-sm"
-                    >
-                      <span className="text-gray-600">
-                        {item.name} x{item.quantity}
-                      </span>
-                      <span className="font-semibold">
-                        {formatPrice(item.price * item.quantity)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <p className="text-gray-600 text-sm">
-                Bizagezwa aho uri binyuze kuri WhatsApp - Reba ubutumwa bwawe ubashe gukurikirana aho bigeze
-              </p>
+              <img
+                src={food.image || 'https://via.placeholder.com/500x400?text=Ibiryo'}
+                alt={food.name || 'Ibiryo'}
+                className="w-full h-96 object-cover rounded-xl"
+              />
             </motion.div>
-          ))}
-        </div>
 
-        {/* Additional Info */}
-        <div className="mt-8 space-y-2 text-sm text-gray-600">
-          <p>✓ biva mubikoresho bicyi meze neza</p>
-          <p>✓ bitegurwa byihuse</p>
-          <p>✓ Kwishyura mu mutekano ukoresheje WhatsApp</p>
-        </div>
+            {/* Details */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+            >
+              {/* Added fallback for food.name */}
+              <h1 className="text-4xl font-bold text-dark mb-4">{food.name || 'Ibiryo'}</h1>
 
+              <div className="flex items-center gap-4 mb-6">
+                <div className="flex items-center gap-1">
+                  <span className="text-yellow-400 text-2xl">★</span>
+                  <span className="text-xl font-semibold">{food.rating || '4.5'}</span>
+                </div>
+                <span className="text-gray-600">
+                  Resitora: {food.restaurantName || 'Nzanira'}
+                </span>
+              </div>
+
+              <p className="text-gray-600 text-lg mb-6">{food.description}</p>
+
+              <div className="bg-light p-6 rounded-lg mb-6">
+                <div className="text-4xl font-bold text-primary mb-2">
+                  {/* Added fallback for food.price */}
+                  {formatPrice(food.price || 0)}
+                </div>
+                <p className="text-gray-600">Buri kimwe</p>
+              </div>
+
+              {message && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className={`p-3 rounded-lg mb-6 ${
+                    message.includes('✓')
+                      ? 'bg-green-100 text-green-700'
+                      : 'bg-red-100 text-red-700'
+                  }`}
+                >
+                  {message}
+                </motion.div>
+              )}
+
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-4 mb-6">
+                <span className="font-semibold">Umubare:</span>
+                <div className="flex items-center border-2 border-gray-300 rounded-lg">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="px-4 py-2 hover:bg-light transition"
+                  >
+                    −
+                  </button>
+                  <span className="px-6 py-2 font-semibold">{quantity}</span>
+                  <button
+                    onClick={() => setQuantity(quantity + 1)}
+                    className="px-4 py-2 hover:bg-light transition"
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+
+              {/* Add to Cart Button */}
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleAddToCart}
+                disabled={addingToCart}
+                className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50 text-lg"
+              >
+                {addingToCart ? 'Biri kujya mu igare...' : 'Shyira mu igare'}
+              </motion.button>
+
+              {/* Additional Info */}
+              <div className="mt-8 space-y-2 text-sm text-gray-600">
+                <p>✓ Ibikoresho bicyeye meza neza</p>
+                <p>✓ Bitegurwa byihuse</p>
+                <p>✓ Kwishyura mu mutekano ukoresheje WhatsApp</p>
+              </div>
+            </motion.div>
+          </div>
+        </div>
       </div>
     </div>
   );
