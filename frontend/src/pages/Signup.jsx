@@ -11,15 +11,22 @@ const containerVariants = {
     opacity: 1,
     scale: 1,
     y: 0,
+    x: 0, // YONGEYWEMO: Kugira ngo imenye aho iri mbere yo gusohoka
     transition: {
       type: "spring",
       stiffness: 100,
       damping: 20,
       mass: 1,
       when: "beforeChildren",
-      staggerChildren: 0.1, // Smooth cascading entrance for form fields
+      staggerChildren: 0.1, 
     },
   },
+  // YONGEYWEMO: Iyi niyo ituma paji inyerera isohoka igana iburyo (x: 50)
+  exit: { 
+    opacity: 0, 
+    x: 50, 
+    transition: { duration: 0.2, ease: "easeIn" } 
+  }
 };
 
 const itemVariants = {
@@ -37,7 +44,7 @@ const errorVariants = {
     opacity: 1, 
     height: "auto",
     scale: 1, 
-    x: [0, -6, 6, -6, 6, 0], // The "No" head-shake keyframes
+    x: [0, -6, 6, -6, 6, 0], 
     transition: { duration: 0.4, type: "spring", stiffness: 200 } 
   },
   exit: { opacity: 0, height: 0, scale: 0.9, transition: { duration: 0.2 } }
@@ -58,7 +65,6 @@ export default function Signup() {
     setError('');
     setLoading(true);
 
-    // Validation Logic
     if (!name) {
       setError('izina rirakenewe');
       setLoading(false);
@@ -95,7 +101,6 @@ export default function Signup() {
   };
 
   return (
-    // Deep, animated gradient background
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-900 via-slate-900 to-indigo-900 px-4 py-12 overflow-hidden relative">
       
       {/* Decorative blurred background elements */}
@@ -106,7 +111,7 @@ export default function Signup() {
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        // Glassmorphism effect
+        exit="exit" // YONGEYWEMO HANO: Kugira ngo ikoreshe ya animation yo gusohoka hejuru
         className="bg-white/90 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-3xl p-8 w-full max-w-md relative z-10"
       >
         <motion.div variants={itemVariants}>
@@ -134,7 +139,6 @@ export default function Signup() {
         </AnimatePresence>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Full Name Field */}
           <motion.div variants={itemVariants}>
             <label className="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-widest">Amazina</label>
             <div className={`relative transition-all duration-300 ${focusedInput === 'name' ? 'scale-[1.015] shadow-lg shadow-teal-500/10' : ''}`}>
@@ -150,7 +154,6 @@ export default function Signup() {
             </div>
           </motion.div>
 
-          {/* Email Field */}
           <motion.div variants={itemVariants}>
             <label className="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-widest">Imeri</label>
             <div className={`relative transition-all duration-300 ${focusedInput === 'email' ? 'scale-[1.015] shadow-lg shadow-teal-500/10' : ''}`}>
@@ -166,7 +169,6 @@ export default function Signup() {
             </div>
           </motion.div>
 
-          {/* Password Field */}
           <motion.div variants={itemVariants}>
             <label className="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-widest">Ijambobanga</label>
             <div className={`relative transition-all duration-300 ${focusedInput === 'password' ? 'scale-[1.015] shadow-lg shadow-teal-500/10' : ''}`}>
@@ -182,7 +184,6 @@ export default function Signup() {
             </div>
           </motion.div>
 
-          {/* Confirm Password Field */}
           <motion.div variants={itemVariants}>
             <label className="block text-slate-700 font-bold mb-1.5 text-xs uppercase tracking-widest">Emeza ijambobanga</label>
             <div className={`relative transition-all duration-300 ${focusedInput === 'confirm' ? 'scale-[1.015] shadow-lg shadow-teal-500/10' : ''}`}>
@@ -198,7 +199,6 @@ export default function Signup() {
             </div>
           </motion.div>
 
-          {/* Submit Button */}
           <motion.div variants={itemVariants} className="pt-4">
             <motion.button
               whileHover={!loading ? { scale: 1.02, y: -2 } : {}}

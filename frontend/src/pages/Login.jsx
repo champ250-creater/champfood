@@ -17,7 +17,6 @@ export default function Login() {
     setLoading(true);
 
     if (!validateEmail(email)) {
-      // Fixed a small typo here for better Kinyarwanda phrasing
       setError('Tanga imeri ikora neza.');
       setLoading(false);
       return;
@@ -31,26 +30,32 @@ export default function Login() {
 
     try {
       const response = await authService.login(email, password);
-      // FIXED: Added .data.data to correctly grab the token and user!
       storeAuthToken(response.data.data.token, response.data.data.user);
       navigate('/');
     } catch (err) {
-      // Added a comma for proper punctuation
       setError(err.response?.data?.message || 'Kwinjira byanze, gerageza kongera.');
     } finally {
       setLoading(false);
     }
   };
 
+  // ANIMATION: Uko paji yinjira n'uko isohoka
+  const pageVariants = {
+    initial: { opacity: 0, x: -50 }, // Yinjira ituruka ibumoso
+    animate: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
+    exit: { opacity: 0, x: -50, transition: { duration: 0.2, ease: "easeIn" } } // Isohoka isubira ibumoso
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-accent px-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary to-accent px-4 overflow-hidden">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
       >
         <h1 className="text-3xl font-bold text-center mb-2 text-dark">Murakaza neza</h1>
-        {/* Capitalized NZANIRA for brand consistency */}
         <p className="text-center text-gray-600 mb-8">Injira muri NZANIRA utangire gutumiza</p>
 
         {error && (
