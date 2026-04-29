@@ -157,12 +157,12 @@ export default function FoodDetails() {
                 disabled={addingToCart}
                 className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50 text-lg"
               >
-                {addingToCart ? 'Biri kujya mu igare...' : 'Shyira mu igare'}
+                {addingToCart ? 'Biri kujya mu bitoranywa...' : 'Shyira mu byatoranyijwe'}
               </motion.button>
 
               {/* Additional Info */}
               <div className="mt-8 space-y-2 text-sm text-gray-600">
-                <p>✓ Ibikoresho bicyeye meza neza</p>
+                <p>✓ Ibikoresho bikimeze neza ni suku ihagije</p>
                 <p>✓ Bitegurwa byihuse</p>
                 <p>✓ Kwishyura mu mutekano ukoresheje WhatsApp</p>
               </div>
