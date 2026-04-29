@@ -64,8 +64,8 @@ export default function Navbar() {
             <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-[0_4px_10px_rgba(20,184,166,0.3)] group-hover:rotate-6 transition-transform duration-300">
               <span className="text-white font-extrabold text-lg">N</span>
             </div>
-            <span className="font-extrabold text-2xl tracking-tight text-slate-800 dark:text-white transition-colors">
-              NZAN<span className="text-teal-500">IRA</span>
+            <span className="font-extrabold text-2xl tracking-tight text-slate-500 dark:text-white transition-colors">
+              NZAN<span className="text-teal-800">IRA</span>
             </span>
           </Link>
 

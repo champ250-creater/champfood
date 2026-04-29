@@ -38,7 +38,7 @@ export default function FoodCard({ food }) {
           to={`/food/${food.id}`}
           className="w-full bg-gradient-to-r from-primary to-accent text-white py-2 rounded-lg font-semibold hover:shadow-lg transition duration-300 text-center block"
         >
-          View Details
+         Reba Ibisobanuro birambuye
         </Link>
       </div>
     </motion.div>

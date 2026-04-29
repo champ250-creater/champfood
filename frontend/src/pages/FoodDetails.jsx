@@ -1,165 +1,134 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import LoadingSpinner from '../components/LoadingSpinner';
-import { foodService, cartService } from '../services';
-import { formatPrice, getStoredUser } from '../utils/helpers';
+import EmptyState from '../components/EmptyState';
+import { orderService } from '../services';
+import { formatPrice, formatDate } from '../utils/helpers';
 
-export default function FoodDetails() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [food, setFood] = useState(null);
+export default function Orders() {
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [quantity, setQuantity] = useState(1);
-  const [addingToCart, setAddingToCart] = useState(false);
-  const [message, setMessage] = useState('');
-  const user = getStoredUser();
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    fetchFood();
-  }, [id]);
+    fetchOrders();
+  }, []);
 
-  const fetchFood = async () => {
+  const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await foodService.getFoodById(id);
-      setFood(response.data.data);
+      const response = await orderService.getOrders();
+      setOrders(response.data.data || []);
     } catch (err) {
       console.error(err);
-      setMessage('Failed to load food details');
+      setError('Ntibyakunze kuzana komande');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAddToCart = async () => {
-    if (!user) {
-      navigate('/login');
-      return;
-    }
-
-    try {
-      setAddingToCart(true);
-      await cartService.addToCart(id, quantity);
-      setMessage('Added to cart! ✓');
-      setTimeout(() => {
-        navigate('/cart');
-      }, 1500);
-    } catch (err) {
-      setMessage('Failed to add to cart');
-      console.error(err);
-    } finally {
-      setAddingToCart(false);
-    }
-  };
-
   if (loading) return <LoadingSpinner />;
-  if (!food) return <div className="text-center py-20">Food not found</div>;
+
+  if (orders.length === 0) {
+    return (
+      <div className="min-h-screen bg-light py-12 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
+          <EmptyState
+            title="Nta Komande Urakora"
+            description="Nta komande n'imwe urakora kugeza ubu. Tangira ureba ibiryo byiza duteka mu isoko ryacu!"
+            icon="📦"
+          />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-light py-12 px-4">
       <div className="max-w-4xl mx-auto">
-        <motion.button
-          onClick={() => navigate('/')}
-          className="mb-6 text-primary font-semibold hover:underline"
-        >
-          ← Back to Home
-        </motion.button>
+        <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
 
-        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
-            {/* Image */}
+        {error && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-red-100 text-red-700 p-4 rounded-lg mb-8"
+          >
+            {error}
+          </motion.div>
+        )}
+
+        <div className="space-y-6">
+          {orders.map((order, index) => (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              key={order.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition duration-300"
             >
-              <img
-                src={food.image || 'https://via.placeholder.com/500x400?text=Food'}
-                alt={food.name}
-                className="w-full h-96 object-cover rounded-xl"
-              />
-            </motion.div>
-
-            {/* Details */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-            >
-              <h1 className="text-4xl font-bold text-dark mb-4">{food.name}</h1>
-
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center gap-1">
-                  <span className="text-yellow-400 text-2xl">★</span>
-                  <span className="text-xl font-semibold">{food.rating || '4.5'}</span>
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-dark">
+                    Komande #{order.id}
+                  </h3>
+                  <p className="text-gray-600 text-sm">
+                    {formatDate(order.createdAt)}
+                  </p>
                 </div>
-                <span className="text-gray-600">
-                  Restaurant: {food.restaurantName}
-                </span>
-              </div>
-
-              <p className="text-gray-600 text-lg mb-6">{food.description}</p>
-
-              <div className="bg-light p-6 rounded-lg mb-6">
-                <div className="text-4xl font-bold text-primary mb-2">
-                  {formatPrice(food.price)}
-                </div>
-                <p className="text-gray-600">Per item</p>
-              </div>
-
-              {message && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className={`p-3 rounded-lg mb-6 ${
-                    message.includes('✓')
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-red-100 text-red-700'
-                  }`}
-                >
-                  {message}
-                </motion.div>
-              )}
-
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-4 mb-6">
-                <span className="font-semibold">Quantity:</span>
-                <div className="flex items-center border-2 border-gray-300 rounded-lg">
-                  <button
-                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                    className="px-4 py-2 hover:bg-light transition"
+                <div className="flex items-center gap-4 mt-4 md:mt-0">
+                  <span
+                    className={`px-4 py-2 rounded-lg font-semibold text-sm ${
+                      order.status === 'completed'
+                        ? 'bg-green-100 text-green-700'
+                        : order.status === 'pending'
+                        ? 'bg-yellow-100 text-black-700'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
                   >
-                    −
-                  </button>
-                  <span className="px-6 py-2 font-semibold">{quantity}</span>
-                  <button
-                    onClick={() => setQuantity(quantity + 1)}
-                    className="px-4 py-2 hover:bg-light transition"
-                  >
-                    +
-                  </button>
+                    {order.status?.toUpperCase() || 'ITEGEREJWE'}
+                  </span>
+                  <span className="font-bold text-lg text-primary">
+                    {formatPrice(order.totalPrice)}
+                  </span>
                 </div>
               </div>
 
-              {/* Add to Cart Button */}
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleAddToCart}
-                disabled={addingToCart}
-                className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-4 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50 text-lg"
-              >
-                {addingToCart ? 'Adding to Cart...' : 'Add to Cart'}
-              </motion.button>
-
-              {/* Additional Info */}
-              <div className="mt-8 space-y-2 text-sm text-gray-600">
-                <p>✓ Fresh ingredients</p>
-                <p>✓ Quick preparation</p>
-                <p>✓ Secure payment via WhatsApp</p>
+              {/* Order Items */}
+              <div className="bg-light p-4 rounded-lg mb-4">
+                <h4 className="font-semibold text-dark mb-3">Ibyo Watumije</h4>
+                <div className="space-y-2">
+                  {order.items?.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex justify-between text-sm"
+                    >
+                      <span className="text-gray-600">
+                        {item.name} x{item.quantity}
+                      </span>
+                      <span className="font-semibold">
+                        {formatPrice(item.price * item.quantity)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
+
+              <p className="text-gray-600 text-sm">
+                Bizagezwa aho uri binyuze kuri WhatsApp - Reba ubutumwa bwawe ubashe gukurikirana aho bigeze
+              </p>
             </motion.div>
-          </div>
+          ))}
         </div>
+
+        {/* Additional Info */}
+        <div className="mt-8 space-y-2 text-sm text-gray-600">
+          <p>✓ biva mubikoresho bicyi meze neza</p>
+          <p>✓ bitegurwa byihuse</p>
+          <p>✓ Kwishyura mu mutekano ukoresheje WhatsApp</p>
+        </div>
+
       </div>
     </div>
   );
