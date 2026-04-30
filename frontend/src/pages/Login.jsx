@@ -41,9 +41,9 @@ export default function Login() {
 
   // ANIMATION: Uko paji yinjira n'uko isohoka
   const pageVariants = {
-    initial: { opacity: 0, x: -50 }, // Yinjira ituruka ibumoso
+    initial: { opacity: 0, x: -50 }, 
     animate: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } },
-    exit: { opacity: 0, x: -50, transition: { duration: 0.2, ease: "easeIn" } } // Isohoka isubira ibumoso
+    exit: { opacity: 0, x: -50, transition: { duration: 0.2, ease: "easeIn" } } 
   };
 
   return (
@@ -91,12 +91,22 @@ export default function Login() {
             />
           </div>
 
+          {/* NEW: Forgot Password Link added here! */}
+          <div className="flex justify-end mt-1 mb-2">
+            <Link 
+              to="/forgot-password" 
+              className="text-sm font-semibold text-primary hover:text-accent transition-colors duration-300"
+            >
+              Wibagiwe ijambo ryibanga?
+            </Link>
+          </div>
+
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-primary to-accent text-white font-bold py-3 rounded-lg hover:shadow-lg transition duration-300 disabled:opacity-50 mt-2"
           >
             {loading ? 'Kwinjira...' : 'INJIRA'}
           </motion.button>

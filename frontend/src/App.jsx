@@ -15,6 +15,8 @@ import Cart from './pages/Cart';
 import Order from './pages/Order';
 import Contact from './pages/Contact';
 import Orders from './pages/Orders';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import './index.css';
 
 // 1. Turemye iyi component kugira ngo tubashe gukoresha useLocation()
@@ -59,6 +61,8 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </AnimatePresence>
