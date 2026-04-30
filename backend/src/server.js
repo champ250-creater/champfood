@@ -28,7 +28,13 @@ app.get('/health', (req, res) => {
 });
 
 // API Routes
+// This handles requests like /api/auth/login
 app.use('/api/auth', authRoutes);
+
+// --- ADDED THIS LINE ---
+// This handles requests like /forgot-password directly
+app.use('/', authRoutes); 
+
 app.use('/api/foods', foodRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
