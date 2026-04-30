@@ -14,7 +14,7 @@ export default function ForgotPassword() {
 
     try {
       // NOTE: Make sure this URL matches your actual backend port (e.g., 5000 or 3000)
-      const response = await fetch('http://localhost:5000/api/auth/forgot-password', {
+      const response = await fetch('http://localhost:5173/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
