@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
-import crypto from 'crypto'; // Built into Node.js for generating tokens
-import nodemailer from 'nodemailer'; // Remember to run: npm install nodemailer
+import crypto from 'crypto'; 
+import nodemailer from 'nodemailer'; 
 
 class AuthService {
   // --- EXISTING SIGNUP ---
@@ -60,7 +60,7 @@ class AuthService {
     }
   }
 
-  // --- NEW: GENERATE PASSWORD RESET ---
+  // --- GENERATE PASSWORD RESET ---
   static async generatePasswordReset(email) {
     try {
       // 1. Check if user exists
@@ -82,13 +82,13 @@ class AuthService {
       // 4. Set expiration to 15 minutes from now
       const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-      // 5. Save the hashed token and expiration time in NeonDB
+      // 5. Save the hashed token and expiration time
       await pool.query(
         'UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3',
         [hashedToken, expiresAt, email]
       );
 
-      // 6. Setup Email Transporter (You will need an App Password from Gmail)
+      // 6. Setup Email Transporter
       const transporter = nodemailer.createTransport({
         service: 'Gmail',
         auth: {
@@ -97,11 +97,11 @@ class AuthService {
         }
       });
 
-      // 7. Send the email with the un-hashed token in the URL
+      // 7. Send the email
       const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
       
       const mailOptions = {
-        from: 'NZANIRA Support <support@nzanira.com>',
+        from: process.env.EMAIL_FROM, // Updated to use .env variable
         to: email,
         subject: 'Nzanira - Password Reset Request',
         html: `
@@ -120,14 +120,12 @@ class AuthService {
     }
   }
 
-  // --- NEW: VERIFY AND RESET PASSWORD ---
+  // --- VERIFY AND RESET PASSWORD ---
   static async resetPassword(token, newPassword) {
     try {
-      // 1. Hash the incoming token so it matches what is in the database
       const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
       const currentTime = new Date();
 
-      // 2. Find the user with this token, ensuring it hasn't expired
       const userResult = await pool.query(
         'SELECT * FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2',
         [hashedToken, currentTime]
@@ -141,11 +139,9 @@ class AuthService {
 
       const user = userResult.rows[0];
 
-      // 3. Hash the new password
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-      // 4. Update the password and clear out the temporary tokens
       await pool.query(
         'UPDATE users SET password = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2',
         [hashedPassword, user.id]
