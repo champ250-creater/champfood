@@ -119,11 +119,11 @@ class AuthService {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-     // ✅ CORRECT: Two items in the array to match $1 and $2
-await pool.query(
-  'UPDATE users SET password = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2',
-  [hashedPassword, user.id] 
-);
+      // 4. RESET ITSELF: Token and Expires are set to NULL after use
+      await pool.query(
+        'UPDATE users SET password = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2',
+        [hashedPassword, user.id]
+      );
 
       return { success: true, message: 'Password updated successfully!' };
     } catch (error) {
