@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto'; 
-import nodemailer from 'nodemailer'; 
+// import nodemailer from 'nodemailer'; // <-- Commented out for the MVP hack
 
 class AuthService {
   // --- EXISTING SIGNUP ---
@@ -60,7 +60,7 @@ class AuthService {
     }
   }
 
-  // --- GENERATE PASSWORD RESET ---
+  // --- GENERATE PASSWORD RESET (UPDATED FOR MVP) ---
   static async generatePasswordReset(email) {
     try {
       // 1. Check if user exists
@@ -88,34 +88,17 @@ class AuthService {
         [hashedToken, expiresAt, email]
       );
 
-      // 6. Setup Email Transporter
-      const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: process.env.EMAIL_USERNAME, 
-          pass: process.env.EMAIL_PASSWORD  
-        }
-      });
-
-      // 7. Send the email (DYNAMIC URL FIX IS HERE)
+      // 6. DYNAMIC URL FIX
       const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-      
-      const mailOptions = {
-        from: process.env.EMAIL_FROM, 
-        to: email,
-        subject: 'Nzanira - Password Reset Request',
-        html: `
-          <div style="font-family: sans-serif; padding: 20px;">
-            <h3>Hello ${user.name},</h3>
-            <p>You requested a password reset. Click the button below to set a new password. This link is valid for 15 minutes.</p>
-            <a href="${resetURL}" style="padding: 10px 20px; background-color: #20c269; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
-            <p style="margin-top: 20px; font-size: 0.9em; color: #555;">If you didn't request this, you can safely ignore this email.</p>
-          </div>
-        `
-      };
 
-      await transporter.sendMail(mailOptions);
-      return { message: 'Reset email sent successfully' };
+      // 7. THE MVP HACK: Print to console instead of sending email
+      console.log('\n=====================================');
+      console.log('🚨 INCOMING PASSWORD RESET 🚨');
+      console.log(`Email: ${email}`);
+      console.log(`Click here to reset: ${resetURL}`);
+      console.log('=====================================\n');
+
+      return { message: 'Reset link generated successfully (Check Server Logs)' };
 
     } catch (error) {
       throw error;
