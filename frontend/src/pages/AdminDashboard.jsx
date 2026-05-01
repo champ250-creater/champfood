@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 export default function AdminDashboard() {
   const [foods, setFoods] = useState([]);
-  const [editingId, setEditingId] = useState(null); // Tracks if we are editing
+  const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -12,13 +12,17 @@ export default function AdminDashboard() {
   });
   const [status, setStatus] = useState({ type: '', message: '' });
 
+  // 🔥 This points directly to your live Render server now!
+  const API_URL = 'https://champfood.onrender.com/api/foods';
+
   // Fetch all foods when the page loads
   const fetchFoods = async () => {
     try {
-      // Change to your Render URL if testing live!
-      const response = await fetch('http://localhost:5000/api/foods');
+      const response = await fetch(API_URL);
       const data = await response.json();
-      if (data.success) setFoods(data.data);
+      if (data.success) {
+        setFoods(data.data);
+      }
     } catch (error) {
       console.error("Failed to fetch foods", error);
     }
@@ -32,16 +36,14 @@ export default function AdminDashboard() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle Add OR Update
+  // Handle Save (Both Add AND Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus({ type: 'info', message: 'Saving...' });
 
     try {
-      const url = editingId 
-        ? `http://localhost:5000/api/foods/${editingId}` // PUT URL
-        : 'http://localhost:5000/api/foods/add'; // POST URL
-      
+      // Determines if we are editing an existing item or adding a new one
+      const url = editingId ? `${API_URL}/${editingId}` : `${API_URL}/add`; 
       const method = editingId ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -53,19 +55,23 @@ export default function AdminDashboard() {
       const data = await response.json();
 
       if (data.success) {
-        setStatus({ type: 'success', message: editingId ? 'Food updated!' : 'Food added successfully!' });
+        setStatus({ 
+          type: 'success', 
+          message: editingId ? 'Food updated successfully!' : 'Food added successfully!' 
+        });
+        // Clear the form
         setFormData({ name: '', price: '', category: 'Local Dishes', image_url: '', description: '' });
-        setEditingId(null); // Reset edit mode
-        fetchFoods(); // Refresh the list
+        setEditingId(null); 
+        fetchFoods(); // Refresh the list of foods
       } else {
         setStatus({ type: 'error', message: data.message });
       }
     } catch (error) {
-      setStatus({ type: 'error', message: 'Network error. Make sure backend is running.' });
+      setStatus({ type: 'error', message: 'Network error. Make sure your Render backend is running.' });
     }
   };
 
-  // Handle Edit Button Click
+  // Handle Edit Button
   const handleEdit = (food) => {
     setEditingId(food.id);
     setFormData({
@@ -75,21 +81,21 @@ export default function AdminDashboard() {
       image_url: food.image_url,
       description: food.description
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll back to form
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrolls back up to the form
   };
 
-  // Handle Delete Button Click
+  // Handle Delete Button
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/foods/${id}`, {
+      const response = await fetch(`${API_URL}/${id}`, {
         method: 'DELETE',
       });
       const data = await response.json();
 
       if (data.success) {
-        fetchFoods(); // Refresh the list
+        fetchFoods(); // Refresh the list after deleting
       }
     } catch (error) {
       console.error("Failed to delete food", error);
@@ -108,13 +114,12 @@ export default function AdminDashboard() {
         </h2>
 
         {status.message && (
-          <div className={`p-4 mb-6 rounded-lg ${status.type === 'success' ? 'bg-green-50 text-green-700' : status.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
+          <div className={`p-4 mb-6 rounded-lg font-semibold ${status.type === 'success' ? 'bg-green-50 text-green-700' : status.type === 'error' ? 'bg-red-50 text-red-700' : 'bg-blue-50 text-blue-700'}`}>
             {status.message}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Same inputs you already had */}
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">Food Name</label>
             <input type="text" name="name" value={formData.name} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500" />
@@ -132,7 +137,7 @@ export default function AdminDashboard() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">Image URL (Ends in .jpg or .png)</label>
+            <label className="block text-sm font-semibold text-slate-700 mb-1">Image URL (Direct link ending in .jpg or .png)</label>
             <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500" />
           </div>
           <div>
@@ -161,7 +166,7 @@ export default function AdminDashboard() {
         ) : (
           <ul className="divide-y divide-slate-200">
             {foods.map((food) => (
-              <li key={food.id} className="p-4 flex items-center justify-between hover:bg-slate-50">
+              <li key={food.id} className="p-4 flex flex-col sm:flex-row sm:items-center justify-between hover:bg-slate-50 gap-4">
                 <div className="flex items-center gap-4">
                   <img src={food.image_url} alt={food.name} className="w-16 h-16 object-cover rounded-lg bg-slate-200" />
                   <div>
@@ -170,10 +175,10 @@ export default function AdminDashboard() {
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => handleEdit(food)} className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold text-sm">
+                  <button onClick={() => handleEdit(food)} className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 font-semibold text-sm transition-colors">
                     Edit
                   </button>
-                  <button onClick={() => handleDelete(food.id)} className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 font-semibold text-sm">
+                  <button onClick={() => handleDelete(food.id)} className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 font-semibold text-sm transition-colors">
                     Delete
                   </button>
                 </div>
