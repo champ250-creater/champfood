@@ -17,9 +17,11 @@ import Contact from './pages/Contact';
 import Orders from './pages/Orders';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+// 1. ADD THIS IMPORT
+import AdminDashboard from './pages/AdminDashboard'; 
 import './index.css';
 
-// 1. Turemye iyi component kugira ngo tubashe gukoresha useLocation()
+// Turemye iyi component kugira ngo tubashe gukoresha useLocation()
 function AnimatedRoutes() {
   const location = useLocation();
 
@@ -37,6 +39,7 @@ function AnimatedRoutes() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/contact" element={<Contact />} />
+        
         <Route
           path="/cart"
           element={
@@ -61,6 +64,17 @@ function AnimatedRoutes() {
             </ProtectedRoute>
           }
         />
+        
+        {/* 2. ADD YOUR ADMIN ROUTE HERE */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
         <Route path="*" element={<Navigate to="/" replace />} />
@@ -75,7 +89,7 @@ function App() {
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-grow">
-          {/* 2. Hano twashyizemo ya component yacu nshya twaremye hejuru */}
+          {/* Hano twashyizemo ya component yacu nshya twaremye hejuru */}
           <AnimatedRoutes />
         </main>
         <Footer />
