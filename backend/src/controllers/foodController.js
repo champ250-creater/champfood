@@ -1,9 +1,9 @@
 import FoodService from '../services/foodService.js';
-import pool from '../config/database.js'; // Make sure to add this import!
+import pool from '../config/database.js';
 
 class FoodController {
   
-  // 🚨 THE NEW ADMIN FUNCTION WE NEED 🚨
+  // --- ADD FOOD ---
   static async addFood(req, res, next) {
     try {
       const { name, description, price, category, image_url } = req.body;
@@ -23,8 +23,44 @@ class FoodController {
     }
   }
 
-  // --- Your Existing Functions Below ---
+  // --- UPDATE FOOD ---
+  static async updateFood(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { name, description, price, image_url, category } = req.body;
 
+      const result = await pool.query(
+        'UPDATE foods SET name = $1, description = $2, price = $3, image_url = $4, category = $5 WHERE id = $6 RETURNING *',
+        [name, description, price, image_url, category, id]
+      );
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Food not found' });
+      }
+
+      res.status(200).json({ success: true, data: result.rows[0] });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // --- DELETE FOOD ---
+  static async deleteFood(req, res, next) {
+    try {
+      const { id } = req.params;
+      const result = await pool.query('DELETE FROM foods WHERE id = $1 RETURNING *', [id]);
+
+      if (result.rows.length === 0) {
+        return res.status(404).json({ success: false, message: 'Food not found' });
+      }
+
+      res.status(200).json({ success: true, message: 'Food deleted successfully' });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  // --- GET ALL FOODS ---
   static async getAllFoods(req, res, next) {
     try {
       const foods = await FoodService.getAllFoods();
@@ -38,6 +74,7 @@ class FoodController {
     }
   }
 
+  // --- GET FOOD BY ID ---
   static async getFoodById(req, res, next) {
     try {
       const { id } = req.params;
@@ -52,6 +89,7 @@ class FoodController {
     }
   }
 
+  // --- GET RESTAURANTS ---
   static async getRestaurants(req, res, next) {
     try {
       const restaurants = await FoodService.getRestaurants();
@@ -65,6 +103,7 @@ class FoodController {
     }
   }
 
+  // --- GET RESTAURANT BY ID ---
   static async getRestaurantById(req, res, next) {
     try {
       const { id } = req.params;
