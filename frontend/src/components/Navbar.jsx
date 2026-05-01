@@ -54,7 +54,6 @@ export default function Navbar() {
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      // Added dark: classes here!
       className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -80,6 +79,10 @@ export default function Navbar() {
                 </Link>
                 <Link to="/orders" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
                   Ibyo natumije
+                </Link>
+                {/* Desktop Admin Panel Link Added Here */}
+                <Link to="/admin" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
+                  Admin Panel
                 </Link>
               </>
             )}
@@ -176,6 +179,14 @@ export default function Navbar() {
                     className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
                   >
                     Ibyo natumije
+                  </Link>
+                  {/* Mobile Admin Panel Link Added Here */}
+                  <Link 
+                    to="/admin" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
+                  >
+                    Admin Panel
                   </Link>
                 </>
               )}
