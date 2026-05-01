@@ -97,18 +97,20 @@ class AuthService {
         }
       });
 
-      // 7. Send the email
-      const resetURL = `http://localhost:5173/reset-password/${resetToken}`;
+      // 7. Send the email (DYNAMIC URL FIX IS HERE)
+      const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
       
       const mailOptions = {
-        from: process.env.EMAIL_FROM, // Updated to use .env variable
+        from: process.env.EMAIL_FROM, 
         to: email,
         subject: 'Nzanira - Password Reset Request',
         html: `
-          <h3>Hello ${user.name},</h3>
-          <p>You requested a password reset. Click the button below to set a new password. This link is valid for 15 minutes.</p>
-          <a href="${resetURL}" style="padding: 10px 20px; background-color: #20c269; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
-          <p>If you didn't request this, you can safely ignore this email.</p>
+          <div style="font-family: sans-serif; padding: 20px;">
+            <h3>Hello ${user.name},</h3>
+            <p>You requested a password reset. Click the button below to set a new password. This link is valid for 15 minutes.</p>
+            <a href="${resetURL}" style="padding: 10px 20px; background-color: #20c269; color: white; text-decoration: none; border-radius: 5px; display: inline-block; margin-top: 10px;">Reset Password</a>
+            <p style="margin-top: 20px; font-size: 0.9em; color: #555;">If you didn't request this, you can safely ignore this email.</p>
+          </div>
         `
       };
 
