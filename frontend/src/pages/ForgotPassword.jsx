@@ -2,6 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
+// CHANGE THIS TO YOUR RENDER URL WHEN YOU DEPLOY TO VERCEL
+// Remove this:
+// const API_URL = 'http://localhost:5000/api/auth';
+
+// Add your live Render URL:
+const API_URL = 'https://champfood.onrender.com/api/auth';
+
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState('idle'); // 'idle', 'loading', 'success', 'error'
@@ -13,8 +20,7 @@ export default function ForgotPassword() {
     setMessage('');
 
     try {
-      // NOTE: Make sure this URL matches your actual backend port (e.g., 5000 or 3000)
-      const response = await fetch('http://localhost:5173/api/auth/forgot-password', {
+      const response = await fetch(`${API_URL}/forgot-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
@@ -36,8 +42,6 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4 transition-colors duration-300">
-      
-      {/* Background Decorative Elements */}
       <div className="absolute top-20 left-20 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
       <div className="absolute top-40 right-20 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
 
@@ -54,11 +58,10 @@ export default function ForgotPassword() {
           </div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Wibagiwe Ijambo Ryibanga?</h2>
           <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
-            Andika email yawe hano, turakoherereza link kugira ngo uhindure ijambo ryibanga ryawe.
+            Andika email yawe hano, turakoherereza link kugira ngo uhindure.
           </p>
         </div>
 
-        {/* Dynamic Alert Messages */}
         {status === 'success' && (
           <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-6 p-4 bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 rounded-xl border border-teal-100 dark:border-teal-800/50 text-sm font-medium text-center">
             {message}
@@ -71,7 +74,6 @@ export default function ForgotPassword() {
           </motion.div>
         )}
 
-        {/* The Form */}
         {status !== 'success' && (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -94,21 +96,14 @@ export default function ForgotPassword() {
               disabled={status === 'loading'}
               className="w-full bg-gradient-to-r from-teal-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center"
             >
-              {status === 'loading' ? (
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-              ) : (
-                'Ohereza Link'
-              )}
+              {status === 'loading' ? 'Tegereza...' : 'Ohereza Link'}
             </button>
           </form>
         )}
 
         <div className="mt-8 text-center">
           <Link to="/login" className="text-slate-500 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 text-sm font-semibold transition-colors">
-            &larr; Subira inyuma ahandikirwa (Back to Login)
+            &larr; Subira inyuma (Back to Login)
           </Link>
         </div>
       </motion.div>
