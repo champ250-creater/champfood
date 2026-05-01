@@ -15,10 +15,18 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(helmet());
+
+// ✅ FIXED: Using an array to allow both your local computer and live sites
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: [
+    'http://localhost:5173',        // Allows local testing
+    process.env.FRONTEND_URL,       // Allows your environment variable
+    'https://nzanira.vercel.app',   // Your new live link
+    'https://champfood.vercel.app'  // Your old live link
+  ],
   credentials: true,
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -2,13 +2,12 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto'; 
-import { Resend } from 'resend'; // 1. Import Resend
+import { Resend } from 'resend'; 
 
-// 2. Initialize Resend with your API Key from Render Environment
-const resend = new Resend(process.env.RESEND_API_KEY);
+// 🚨 Notice we REMOVED the "const resend = new Resend..." from up here! 🚨
 
 class AuthService {
-  // --- SIGNUP (Remains the same) ---
+  // --- SIGNUP ---
   static async signup(email, password, name) {
     try {
       const userExists = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -29,7 +28,7 @@ class AuthService {
     } catch (error) { throw error; }
   }
 
-  // --- LOGIN (Remains the same) ---
+  // --- LOGIN ---
   static async login(email, password) {
     try {
       const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -53,7 +52,7 @@ class AuthService {
     } catch (error) { throw error; }
   }
 
-  // --- GENERATE PASSWORD RESET (AUTOMATED WITH RESEND) ---
+  // --- GENERATE PASSWORD RESET ---
   static async generatePasswordReset(email) {
     try {
       const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -76,10 +75,13 @@ class AuthService {
 
       const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-      // 3. SEND REAL EMAIL VIA API
+      // ✅ ADDED IT HERE: Now it only asks for the API key when someone actually clicks "forgot password"
+      const resend = new Resend(process.env.RESEND_API_KEY);
+
+      // SEND REAL EMAIL VIA API
       await resend.emails.send({
-        from: 'onboarding@resend.dev', // Default sender for testing
-        to: email, // This sends to the actual user's email
+        from: 'onboarding@resend.dev', 
+        to: email, 
         subject: 'TechBite Kigali - Password Reset Request',
         html: `
           <div style="font-family: sans-serif; padding: 20px;">
@@ -98,7 +100,7 @@ class AuthService {
     }
   }
 
-  // --- RESET PASSWORD (AUTOMATIC CLEANUP) ---
+  // --- RESET PASSWORD ---
   static async resetPassword(token, newPassword) {
     try {
       const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
@@ -119,10 +121,9 @@ class AuthService {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-      // 4. RESET ITSELF: Token and Expires are set to NULL after use
       await pool.query(
         'UPDATE users SET password = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2',
-        [hashedPassword, user.id]
+        [hashedPassword, user.id] 
       );
 
       return { success: true, message: 'Password updated successfully!' };
