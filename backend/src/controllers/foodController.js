@@ -54,10 +54,10 @@ export const addFood = async (req, res, next) => {
     // Get the Cloudinary URL
     const uploadedImage = req.file ? req.file.path : req.body.image_url;
 
-    // 🔥 FIX: We now save the image to BOTH the 'image' and 'image_url' columns!
+    // 🔥 FIX: We separate $5 and $6, passing 'uploadedImage' twice in the array so the DB doesn't get confused
     const newFood = await pool.query(
-      'INSERT INTO foods (name, description, price, category, image, image_url) VALUES ($1, $2, $3, $4, $5, $5) RETURNING *',
-      [name, description, price, category, uploadedImage]
+      'INSERT INTO foods (name, description, price, category, image, image_url) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [name, description, price, category, uploadedImage, uploadedImage]
     );
 
     res.status(201).json({
@@ -77,10 +77,10 @@ export const updateFood = async (req, res, next) => {
     
     const uploadedImage = req.file ? req.file.path : req.body.image_url;
 
-    // 🔥 FIX: We update BOTH the 'image' and 'image_url' columns!
+    // 🔥 FIX: We do the exact same thing here with $4 and $5!
     const result = await pool.query(
-      'UPDATE foods SET name = $1, description = $2, price = $3, image = $4, image_url = $4, category = $5 WHERE id = $6 RETURNING *',
-      [name, description, price, uploadedImage, category, id]
+      'UPDATE foods SET name = $1, description = $2, price = $3, image = $4, image_url = $5, category = $6 WHERE id = $7 RETURNING *',
+      [name, description, price, uploadedImage, uploadedImage, category, id]
     );
 
     if (result.rows.length === 0) {
