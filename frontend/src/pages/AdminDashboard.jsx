@@ -4,7 +4,6 @@ export default function AdminDashboard() {
   const [foods, setFoods] = useState([]);
   const [editingId, setEditingId] = useState(null);
   
-  // State for the text inputs
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -12,13 +11,11 @@ export default function AdminDashboard() {
     description: ''
   });
 
-  // 🔥 NEW: State to hold the actual image file from your computer
   const [imageFile, setImageFile] = useState(null);
-  const [currentImageUrl, setCurrentImageUrl] = useState(''); // Shows old image when editing
+  const [currentImageUrl, setCurrentImageUrl] = useState('');
 
   const [status, setStatus] = useState({ type: '', message: '' });
 
-  // Your live Render server
   const API_URL = 'https://champfood.onrender.com/api/foods';
 
   const fetchFoods = async () => {
@@ -41,38 +38,34 @@ export default function AdminDashboard() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // 🔥 NEW: Handle when you select a file
   const handleFileChange = (e) => {
     setImageFile(e.target.files[0]);
   };
 
-  // Handle Save (Add or Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Warn the user that online uploads take a second!
     setStatus({ type: 'info', message: 'Uploading image and saving... please wait.' });
 
     try {
       const url = editingId ? `${API_URL}/${editingId}` : `${API_URL}/add`; 
       const method = editingId ? 'PUT' : 'POST';
 
-      // 🚨 CRITICAL CHANGE: We use FormData to send files over the internet
       const submitData = new FormData();
       submitData.append('name', formData.name);
       submitData.append('price', formData.price);
       submitData.append('category', formData.category);
       submitData.append('description', formData.description);
       
-      // Attach the file if you selected one!
+      // 🔥 BUG FIX: Properly handle the image data
       if (imageFile) {
         submitData.append('image', imageFile);
+      } else if (editingId && currentImageUrl) {
+        // If we are editing but didn't upload a NEW file, keep the old image link!
+        submitData.append('image_url', currentImageUrl);
       }
 
       const response = await fetch(url, {
         method: method,
-        // Note: When using FormData, we DO NOT set 'Content-Type'. 
-        // The browser does it automatically for files!
         body: submitData,
       });
 
@@ -84,12 +77,11 @@ export default function AdminDashboard() {
           message: editingId ? 'Food updated successfully!' : 'Food added successfully!' 
         });
         
-        // Clear everything out
         setFormData({ name: '', price: '', category: 'Local Dishes', description: '' });
         setImageFile(null);
         setCurrentImageUrl('');
         setEditingId(null); 
-        document.getElementById('imageInput').value = ''; // Reset the file input button
+        document.getElementById('imageInput').value = ''; 
         
         fetchFoods(); 
       } else {
@@ -108,7 +100,7 @@ export default function AdminDashboard() {
       category: food.category,
       description: food.description
     });
-    setCurrentImageUrl(food.image_url); // Save the old image so we can show it
+    setCurrentImageUrl(food.image_url); 
     setImageFile(null); 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -165,7 +157,6 @@ export default function AdminDashboard() {
             </select>
           </div>
           
-          {/* 🔥 NEW FILE UPLOAD INPUT 🔥 */}
           <div className="p-4 border-2 border-dashed border-slate-300 rounded-lg bg-slate-50">
             <label className="block text-sm font-semibold text-slate-700 mb-2">Upload Image</label>
             {editingId && currentImageUrl && (
@@ -177,9 +168,9 @@ export default function AdminDashboard() {
             <input 
               type="file" 
               id="imageInput"
-              accept="image/*" // Only allow images
+              accept="image/*" 
               onChange={handleFileChange} 
-              required={!editingId} // Required for new foods, optional for edits
+              required={!editingId} 
               className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" 
             />
           </div>
