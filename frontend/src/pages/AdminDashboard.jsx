@@ -3,19 +3,24 @@ import { useState, useEffect } from 'react';
 export default function AdminDashboard() {
   const [foods, setFoods] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  
+  // State for the text inputs
   const [formData, setFormData] = useState({
     name: '',
     price: '',
     category: 'Local Dishes',
-    image_url: '',
     description: ''
   });
+
+  // 🔥 NEW: State to hold the actual image file from your computer
+  const [imageFile, setImageFile] = useState(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState(''); // Shows old image when editing
+
   const [status, setStatus] = useState({ type: '', message: '' });
 
-  // 🔥 This points directly to your live Render server now!
+  // Your live Render server
   const API_URL = 'https://champfood.onrender.com/api/foods';
 
-  // Fetch all foods when the page loads
   const fetchFoods = async () => {
     try {
       const response = await fetch(API_URL);
@@ -36,20 +41,39 @@ export default function AdminDashboard() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle Save (Both Add AND Update)
+  // 🔥 NEW: Handle when you select a file
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  // Handle Save (Add or Update)
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus({ type: 'info', message: 'Saving...' });
+    
+    // Warn the user that online uploads take a second!
+    setStatus({ type: 'info', message: 'Uploading image and saving... please wait.' });
 
     try {
-      // Determines if we are editing an existing item or adding a new one
       const url = editingId ? `${API_URL}/${editingId}` : `${API_URL}/add`; 
       const method = editingId ? 'PUT' : 'POST';
 
+      // 🚨 CRITICAL CHANGE: We use FormData to send files over the internet
+      const submitData = new FormData();
+      submitData.append('name', formData.name);
+      submitData.append('price', formData.price);
+      submitData.append('category', formData.category);
+      submitData.append('description', formData.description);
+      
+      // Attach the file if you selected one!
+      if (imageFile) {
+        submitData.append('image', imageFile);
+      }
+
       const response = await fetch(url, {
         method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        // Note: When using FormData, we DO NOT set 'Content-Type'. 
+        // The browser does it automatically for files!
+        body: submitData,
       });
 
       const data = await response.json();
@@ -59,32 +83,36 @@ export default function AdminDashboard() {
           type: 'success', 
           message: editingId ? 'Food updated successfully!' : 'Food added successfully!' 
         });
-        // Clear the form
-        setFormData({ name: '', price: '', category: 'Local Dishes', image_url: '', description: '' });
+        
+        // Clear everything out
+        setFormData({ name: '', price: '', category: 'Local Dishes', description: '' });
+        setImageFile(null);
+        setCurrentImageUrl('');
         setEditingId(null); 
-        fetchFoods(); // Refresh the list of foods
+        document.getElementById('imageInput').value = ''; // Reset the file input button
+        
+        fetchFoods(); 
       } else {
         setStatus({ type: 'error', message: data.message });
       }
     } catch (error) {
-      setStatus({ type: 'error', message: 'Network error. Make sure your Render backend is running.' });
+      setStatus({ type: 'error', message: 'Network error. Could not connect to Render.' });
     }
   };
 
-  // Handle Edit Button
   const handleEdit = (food) => {
     setEditingId(food.id);
     setFormData({
       name: food.name,
       price: food.price,
       category: food.category,
-      image_url: food.image_url,
       description: food.description
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scrolls back up to the form
+    setCurrentImageUrl(food.image_url); // Save the old image so we can show it
+    setImageFile(null); 
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Handle Delete Button
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this item?")) return;
 
@@ -95,7 +123,7 @@ export default function AdminDashboard() {
       const data = await response.json();
 
       if (data.success) {
-        fetchFoods(); // Refresh the list after deleting
+        fetchFoods(); 
       }
     } catch (error) {
       console.error("Failed to delete food", error);
@@ -136,10 +164,26 @@ export default function AdminDashboard() {
               <option value="Drinks">Drinks</option>
             </select>
           </div>
-          <div>
-            <label className="block text-sm font-semibold text-slate-700 mb-1">Image URL (Direct link ending in .jpg or .png)</label>
-            <input type="url" name="image_url" value={formData.image_url} onChange={handleChange} required className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500" />
+          
+          {/* 🔥 NEW FILE UPLOAD INPUT 🔥 */}
+          <div className="p-4 border-2 border-dashed border-slate-300 rounded-lg bg-slate-50">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Upload Image</label>
+            {editingId && currentImageUrl && (
+              <div className="mb-3">
+                <p className="text-xs text-slate-500 mb-1">Current Image:</p>
+                <img src={currentImageUrl} alt="Current" className="w-20 h-20 object-cover rounded-md" />
+              </div>
+            )}
+            <input 
+              type="file" 
+              id="imageInput"
+              accept="image/*" // Only allow images
+              onChange={handleFileChange} 
+              required={!editingId} // Required for new foods, optional for edits
+              className="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-teal-50 file:text-teal-700 hover:file:bg-teal-100" 
+            />
           </div>
+
           <div>
             <label className="block text-sm font-semibold text-slate-700 mb-1">Description</label>
             <textarea name="description" value={formData.description} onChange={handleChange} required rows="3" className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-teal-500"></textarea>
@@ -150,7 +194,13 @@ export default function AdminDashboard() {
               {editingId ? 'Update Food Item' : 'Save Food Item'}
             </button>
             {editingId && (
-              <button type="button" onClick={() => { setEditingId(null); setFormData({ name: '', price: '', category: 'Local Dishes', image_url: '', description: '' }); }} className="bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition">
+              <button type="button" onClick={() => { 
+                setEditingId(null); 
+                setFormData({ name: '', price: '', category: 'Local Dishes', description: '' }); 
+                setImageFile(null);
+                setCurrentImageUrl('');
+                document.getElementById('imageInput').value = '';
+              }} className="bg-slate-200 text-slate-700 font-bold py-3 px-6 rounded-lg hover:bg-slate-300 transition">
                 Cancel
               </button>
             )}
