@@ -1,5 +1,4 @@
 import express from 'express';
-// Import all the functions from your controller
 import { 
   getAllFoods, 
   getFoodById, 
@@ -10,21 +9,20 @@ import {
   deleteFood 
 } from '../controllers/foodController.js';
 
+// 🔥 IMPORT YOUR NEW CLOUDINARY UPLOAD TOOL
+import { upload } from '../config/cloudinary.js';
+
 const router = express.Router();
 
-// ==========================================
-// PUBLIC ROUTES (Anyone can see these)
-// ==========================================
+// Public Routes
 router.get('/', getAllFoods);
 router.get('/:id', getFoodById);
 router.get('/restaurants/all', getRestaurants);
 router.get('/restaurants/:id', getRestaurantById);
 
-// ==========================================
-// ADMIN ROUTES (Adding, Editing, Deleting)
-// ==========================================
-router.post('/add', addFood);
-router.put('/:id', updateFood);
+// Admin Routes (Notice we added upload.single('image') here!)
+router.post('/add', upload.single('image'), addFood);
+router.put('/:id', upload.single('image'), updateFood);
 router.delete('/:id', deleteFood);
 
 export default router;

@@ -49,7 +49,12 @@ export const getRestaurantById = async (req, res, next) => {
 
 export const addFood = async (req, res, next) => {
   try {
-    const { name, description, price, category, image_url } = req.body;
+    // Notice we removed image_url from req.body here
+    const { name, description, price, category } = req.body;
+    
+    // 🔥 If a file was uploaded, use the secure Cloudinary URL (req.file.path)!
+    const image_url = req.file ? req.file.path : req.body.image_url;
+
     const newFood = await pool.query(
       'INSERT INTO foods (name, description, price, category, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING *',
       [name, description, price, category, image_url]
@@ -67,7 +72,12 @@ export const addFood = async (req, res, next) => {
 export const updateFood = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, description, price, image_url, category } = req.body;
+    // Notice we removed image_url from req.body here
+    const { name, description, price, category } = req.body;
+    
+    // 🔥 If they uploaded a NEW image, use the Cloudinary URL. Otherwise, keep the old one.
+    const image_url = req.file ? req.file.path : req.body.image_url;
+
     const result = await pool.query(
       'UPDATE foods SET name = $1, description = $2, price = $3, image_url = $4, category = $5 WHERE id = $6 RETURNING *',
       [name, description, price, image_url, category, id]
