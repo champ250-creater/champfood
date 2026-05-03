@@ -49,16 +49,17 @@ export const getRestaurantById = async (req, res, next) => {
 
 export const addFood = async (req, res, next) => {
   try {
-    // Notice we removed image_url from req.body here
     const { name, description, price, category } = req.body;
     
-    // 🔥 If a file was uploaded, use the secure Cloudinary URL (req.file.path)!
-    const image_url = req.file ? req.file.path : req.body.image_url;
+    // Get the Cloudinary URL
+    const uploadedImage = req.file ? req.file.path : req.body.image_url;
 
+    // 🔥 FIX: We now save the image to BOTH the 'image' and 'image_url' columns!
     const newFood = await pool.query(
-      'INSERT INTO foods (name, description, price, category, image_url) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [name, description, price, category, image_url]
+      'INSERT INTO foods (name, description, price, category, image, image_url) VALUES ($1, $2, $3, $4, $5, $5) RETURNING *',
+      [name, description, price, category, uploadedImage]
     );
+
     res.status(201).json({
       success: true,
       message: 'Food added successfully',
@@ -72,19 +73,20 @@ export const addFood = async (req, res, next) => {
 export const updateFood = async (req, res, next) => {
   try {
     const { id } = req.params;
-    // Notice we removed image_url from req.body here
     const { name, description, price, category } = req.body;
     
-    // 🔥 If they uploaded a NEW image, use the Cloudinary URL. Otherwise, keep the old one.
-    const image_url = req.file ? req.file.path : req.body.image_url;
+    const uploadedImage = req.file ? req.file.path : req.body.image_url;
 
+    // 🔥 FIX: We update BOTH the 'image' and 'image_url' columns!
     const result = await pool.query(
-      'UPDATE foods SET name = $1, description = $2, price = $3, image_url = $4, category = $5 WHERE id = $6 RETURNING *',
-      [name, description, price, image_url, category, id]
+      'UPDATE foods SET name = $1, description = $2, price = $3, image = $4, image_url = $4, category = $5 WHERE id = $6 RETURNING *',
+      [name, description, price, uploadedImage, category, id]
     );
+
     if (result.rows.length === 0) {
       return res.status(404).json({ success: false, message: 'Food not found' });
     }
+
     res.status(200).json({ success: true, data: result.rows[0] });
   } catch (error) {
     next(error);
