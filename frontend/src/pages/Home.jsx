@@ -77,7 +77,7 @@ export default function Home() {
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         // REMOVED the solid gradient. ADDED a translucent dark blur.
-        className="bg-slate-900/60 backdrop-blur-sm text-white py-20 px-4 border-b border-slate-700/50"
+        className="bg-slate-900/10 text-white py-20 px-4 border-b border-slate-700/50"
       >
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
