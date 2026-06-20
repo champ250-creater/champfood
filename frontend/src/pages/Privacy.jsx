@@ -8,7 +8,7 @@ const Privacy = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-orange-600 mb-4">How We Use Your Data</h2>
-        <p className="text-gray-700">At NZANIRA, we only collect information that is strictly necessary to deliver your food.</p>
+        <p className="text-gray-700">At Ntuma, we only collect information that is strictly necessary to deliver your food.</p>
       </section>
 
       <section className="mb-8">

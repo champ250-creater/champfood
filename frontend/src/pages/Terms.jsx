@@ -8,7 +8,7 @@ const Terms = () => {
 
       <section className="mb-8">
         <h2 className="text-xl font-semibold text-orange-600 mb-4">1. Introduction</h2>
-        <p className="text-gray-700">Welcome to Nzanira. By using our website and services, you agree to follow these rules. Please read them carefully.</p>
+        <p className="text-gray-700">Welcome to Ntuma. By using our website and services, you agree to follow these rules. Please read them carefully.</p>
       </section>
 
       <section className="mb-8">

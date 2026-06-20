@@ -116,7 +116,7 @@ export default function Signup() {
       >
         <motion.div variants={itemVariants}>
           <h1 className="text-3xl font-extrabold text-center mb-2 bg-gradient-to-r from-teal-700 to-indigo-700 bg-clip-text text-transparent">
-            Iyandikishe muri NZANIRA
+            Iyandikishe muri Ntuma
           </h1>
           <p className="text-center text-slate-500 mb-8 font-medium">Kora konti hanyuma utangire gutumiza</p>
         </motion.div>

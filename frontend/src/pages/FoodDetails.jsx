@@ -101,7 +101,7 @@ export default function FoodDetails() {
                   <span className="text-xl font-semibold">{food.rating || '4.5'}</span>
                 </div>
                 <span className="text-gray-600">
-                  Resitora: {food.restaurantName || 'Nzanira'}
+                  Resitora: {food.restaurantName || 'Ntuma'}
                 </span>
               </div>
 
