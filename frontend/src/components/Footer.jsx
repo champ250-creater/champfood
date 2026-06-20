@@ -6,13 +6,15 @@ export default function Footer() {
     <motion.footer
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      className="bg-dark text-white mt-20"
+      // Replaced solid 'bg-dark' with a translucent dark glass effect
+      className="bg-slate-950/90 backdrop-blur-md text-white mt-20 border-t border-slate-800/50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           
           <div>
-            <h4 className="font-bold mb-4 uppercase">About NZANIRA</h4>
+            {/* Updated name to NTUMA */}
+            <h4 className="font-bold mb-4 uppercase">About NTUMA</h4>
             <p className="text-gray-400 text-sm">
               Urubuga rwawe ukunda rwo gutumiza ibiryo rukugezaho amafunguro aryoshye iwawe.
             </p>
@@ -45,7 +47,8 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-          <p>&copy; 2026 NZANIRA. All rights reserved.</p>
+          {/* Updated name to NTUMA and made the year dynamic */}
+          <p>&copy; {new Date().getFullYear()} NTUMA. All rights reserved.</p>
         </div>
       </div>
     </motion.footer>
