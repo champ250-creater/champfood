@@ -84,7 +84,7 @@ export default function Home() {
             Tuma ibiryo ukunda cyane
           </h1>
           <p className="text-lg md:text-xl mb-8 opacity-90 drop-shadow-sm">
-            Gutanga byihuse, amafunguro mashya, n'ibiciro byiza
+            Dutanga amafunguro meza,muburyo bwiza,kubiciro byiza utasanga ahandi.
           </p>
 
           <motion.div whileHover={{ scale: 1.05 }} className="flex max-w-2xl mx-auto shadow-lg">
