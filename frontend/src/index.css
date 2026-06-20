@@ -23,7 +23,7 @@ body {
     /* The dark gradient overlay ensures your text remains legible */
     linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.95)),
     /* Your new background image */
-    url('/bc.png');
+    url('/123.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed; 
