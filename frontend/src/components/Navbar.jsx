@@ -57,18 +57,23 @@ export default function Navbar() {
       className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20 relative">
           
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-teal-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-[0_4px_10px_rgba(20,184,166,0.3)] group-hover:rotate-6 transition-transform duration-300">
-              <span className="text-white font-extrabold text-lg">N</span>
-            </div>
-            <span className="font-extrabold text-2xl tracking-tight text-slate-500 dark:text-white transition-colors">
-              NZAN<span className="text-teal-800">IRA</span>
-            </span>
-          </Link>
+          {/* --- HANGING BADGE LOGO SECTION --- */}
+          {/* We use relative width to reserve space, but absolute positioning so it drops down over the page */}
+          <div className="relative h-full flex items-start w-24 sm:w-28">
+            <Link to="/" className="absolute top-0 left-0 z-50">
+              <div className="flex items-center justify-center h-24 w-24 rounded-b-full bg-black dark:bg-slate-1000 shadow-md p-2 transition-transform duration-500 hover:scale-110 sm:h-20 sm:w-20 sm:p-3 border-x border-b border-slate-200/50 dark:border-slate-700/50">
+                <img 
+                  src="/ntuma-logo.png" 
+                  alt="ntuma-Logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+            </Link>
+          </div>
 
-          <div className="hidden md:flex items-center gap-8">
+          <div className="hidden md:flex items-center gap-8 pl-4">
             <Link to="/" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
               Ahabanza
             </Link>
@@ -180,7 +185,6 @@ export default function Navbar() {
                   >
                     Ibyo natumije
                   </Link>
-                  {/* Mobile Admin Panel Link Added Here */}
                   <Link 
                     to="/admin" 
                     onClick={() => setIsMenuOpen(false)}
