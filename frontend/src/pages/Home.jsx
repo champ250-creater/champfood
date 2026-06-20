@@ -143,7 +143,7 @@ export default function Home() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         // Made the stats background slightly transparent so it blends with the bottom of the page
-        className="bg-slate-950/80 backdrop-blur-md text-white py-20 px-4 border-t border-slate-800/50"
+        className="bg-slate-950/40 backdrop-blur-md text-white py-20 px-4 border-t border-slate-800/50"
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           <StatItem target="1" label="Restaurant Partners" suffix="+" />
