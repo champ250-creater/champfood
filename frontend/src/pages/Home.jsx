@@ -69,32 +69,33 @@ export default function Home() {
   if (loading) return <LoadingSpinner />;
 
   return (
-    // ADDED dark:bg-slate-900 here!
-    <div className="min-h-screen bg-light dark:bg-slate-900 transition-colors duration-300">
+    // REMOVED bg-light and dark:bg-slate-900. ADDED bg-transparent so the global image shows.
+    <div className="min-h-screen bg-transparent transition-colors duration-300">
       
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
-        className="bg-gradient-to-r from-primary via-accent to-primary text-white py-20 px-4"
+        // REMOVED the solid gradient. ADDED a translucent dark blur.
+        className="bg-slate-900/60 backdrop-blur-sm text-white py-20 px-4 border-b border-slate-700/50"
       >
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 drop-shadow-md">
             Tuma ibiryo ukunda cyane
           </h1>
-          <p className="text-lg md:text-xl mb-8 opacity-90">
+          <p className="text-lg md:text-xl mb-8 opacity-90 drop-shadow-sm">
             Gutanga byihuse, amafunguro mashya, n'ibiciro byiza
           </p>
 
-          <motion.div whileHover={{ scale: 1.05 }} className="flex max-w-2xl mx-auto">
+          <motion.div whileHover={{ scale: 1.05 }} className="flex max-w-2xl mx-auto shadow-lg">
             <input
               type="text"
               placeholder="Shaka ibiryo, n'resitora..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="flex-1 px-6 py-4 rounded-l-lg text-dark focus:outline-none"
+              className="flex-1 px-6 py-4 rounded-l-lg text-slate-900 focus:outline-none"
             />
-            <button className="bg-secondary hover:bg-opacity-90 text-white px-8 py-4 rounded-r-lg font-semibold transition">
+            <button className="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-r-lg font-semibold transition-colors duration-300">
               Search
             </button>
           </motion.div>
@@ -104,7 +105,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {error && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-100 text-red-700 p-4 rounded-lg mb-8">
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-red-100 text-red-700 p-4 rounded-lg mb-8 shadow-sm">
             {error}
           </motion.div>
         )}
@@ -117,8 +118,7 @@ export default function Home() {
           />
         ) : (
           <>
-            {/* ADDED dark:text-white here! */}
-            <h2 className="text-3xl font-bold text-dark dark:text-white mb-8 transition-colors duration-300">
+            <h2 className="text-3xl font-bold text-white mb-8 drop-shadow-sm">
               {searchTerm ? `Search Results (${filteredFoods.length})` : 'IBIRYO Bikunzwe'}
             </h2>
             <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -142,7 +142,8 @@ export default function Home() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="bg-dark text-white py-20 px-4 border-t border-gray-900"
+        // Made the stats background slightly transparent so it blends with the bottom of the page
+        className="bg-slate-950/80 backdrop-blur-md text-white py-20 px-4 border-t border-slate-800/50"
       >
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12 text-center">
           <StatItem target="1" label="Restaurant Partners" suffix="+" />
