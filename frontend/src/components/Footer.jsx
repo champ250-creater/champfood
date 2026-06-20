@@ -7,7 +7,7 @@ export default function Footer() {
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       // Replaced solid 'bg-dark' with a translucent dark glass effect
-      className="bg-slate-950/90 backdrop-blur-md text-white mt-20 border-t border-slate-800/50"
+     className="bg-slate-950/10 text-white py-20 px-4 border-t border-slate-800/50"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
