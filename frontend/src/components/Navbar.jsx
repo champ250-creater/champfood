@@ -102,7 +102,7 @@ export default function Navbar() {
                   NTUMA
                 </span>
                 <span className="block text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
-                  Good food mood
+                  Good food Good mood
                 </span>
               </span>
             </Link>
