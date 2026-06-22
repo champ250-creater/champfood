@@ -1,7 +1,22 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import {
+  FaBars,
+  FaMoon,
+  FaShoppingBag,
+  FaSignOutAlt,
+  FaSun,
+  FaTimes,
+  FaUserShield,
+} from 'react-icons/fa';
 import { getStoredUser, clearAuth } from '../utils/helpers';
+
+const publicLinks = [
+  { to: '/', label: 'Ahabanza' },
+  { to: '/about', label: 'Ibyerekeye' },
+  { to: '/contact', label: 'Twandikire' },
+];
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -9,7 +24,6 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // --- DARK MODE LOGIC ---
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return localStorage.getItem('theme') === 'dark';
   });
@@ -26,7 +40,6 @@ export default function Navbar() {
   }, [isDarkMode]);
 
   const toggleTheme = () => setIsDarkMode(!isDarkMode);
-  // -----------------------
 
   const updateUser = () => {
     const storedUser = getStoredUser();
@@ -35,7 +48,8 @@ export default function Navbar() {
 
   useEffect(() => {
     updateUser();
-  }, [location.pathname]); 
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     window.addEventListener('storage', updateUser);
@@ -49,155 +63,196 @@ export default function Navbar() {
     navigate('/login');
   };
 
+  const isActive = (path) => location.pathname === path;
+
+  const linkClass = (path) =>
+    `focus-ring rounded-full px-4 py-2 text-sm font-bold transition-colors ${
+      isActive(path)
+        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-400/20 dark:text-emerald-200'
+        : 'text-slate-700 hover:bg-slate-100 hover:text-emerald-800 dark:text-slate-200 dark:hover:bg-white/10 dark:hover:text-white'
+    }`;
+
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-slate-200/50 dark:border-slate-700/50 transition-colors duration-300"
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 relative">
-          
-          {/* --- HANGING BADGE LOGO SECTION --- */}
-          {/* We use relative width to reserve space, but absolute positioning so it drops down over the page */}
-          <div className="relative h-full flex items-start w-24 sm:w-28">
-            <Link to="/" className="absolute top-0 left-0 z-50">
-              <div className="flex items-center justify-center h-24 w-24 rounded-b-full bg-black dark:bg-slate-1000 shadow-md p-2 transition-transform duration-500 hover:scale-110 sm:h-20 sm:w-20 sm:p-3 border-x border-b border-slate-200/50 dark:border-slate-700/50">
-                <img 
-                  src="/ntuma-logo.png" 
-                  alt="ntuma-Logo" 
-                  className="w-full h-full object-contain" 
+    <>
+      <a href="#main-content" className="skip-link">
+        Jya ku bikubiyemo
+      </a>
+
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+        className="sticky top-0 z-50 border-b border-white/70 bg-white/90 shadow-sm backdrop-blur-xl transition-colors duration-300 dark:border-white/10 dark:bg-slate-950/90"
+        aria-label="Primary navigation"
+      >
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-20 items-center justify-between gap-4">
+            <Link to="/" className="focus-ring flex min-w-0 items-center gap-3 rounded-full" onClick={closeMenu}>
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-950 p-1.5 shadow-lg ring-1 ring-emerald-300/30">
+                <img
+                  src="/ntuma-logo.png"
+                  alt="NTUMA"
+                  className="h-full w-full object-contain"
                 />
-              </div>
+              </span>
+              <span className="hidden sm:block">
+                <span className="block text-lg font-black tracking-normal text-slate-950 dark:text-white">
+                  NTUMA
+                </span>
+                <span className="block text-xs font-bold uppercase tracking-[0.18em] text-emerald-700 dark:text-emerald-300">
+                  Good food mood
+                </span>
+              </span>
             </Link>
-          </div>
 
-          <div className="hidden md:flex items-center gap-8 pl-4">
-            <Link to="/" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
-              Ahabanza
-            </Link>
-            {user && (
-              <>
-                <Link to="/cart" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
-                  IBYATORANYIJWE
+            <div className="hidden items-center gap-1 md:flex">
+              {publicLinks.map((link) => (
+                <Link key={link.to} to={link.to} className={linkClass(link.to)}>
+                  {link.label}
                 </Link>
-                <Link to="/orders" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
-                  Ibyo natumije
-                </Link>
-                {/* Desktop Admin Panel Link Added Here */}
-                <Link to="/admin" className="text-slate-600 dark:text-slate-300 font-bold hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300">
-                  Admin Panel
-                </Link>
-              </>
-            )}
-          </div>
-
-          <div className="flex items-center gap-3">
-            
-            {/* DARK MODE TOGGLE BUTTON */}
-            <button 
-              onClick={toggleTheme}
-              className="p-2 mr-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:scale-110 transition-all"
-              aria-label="Toggle Dark Mode"
-            >
-              {isDarkMode ? '🌙' : '☀️'}
-            </button>
-
-            {user ? (
-              <div className="flex items-center gap-3 sm:gap-6">
-                <div className="flex items-center gap-2 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 px-3 py-1.5 rounded-full shadow-sm">
-                  <div className="w-7 h-7 bg-gradient-to-r from-teal-500 to-indigo-500 text-white rounded-full flex items-center justify-center text-xs font-bold uppercase ring-2 ring-white dark:ring-slate-900">
-                    {user.name ? user.name.charAt(0) : 'U'}
-                  </div>
-                  <span className="text-sm font-bold text-slate-700 dark:text-slate-200 hidden sm:inline">
-                    {user.name ? user.name.split(' ')[0] : 'User'}
-                  </span>
-                </div>
-                
-                <button
-                  onClick={handleLogout}
-                  className="bg-transparent hover:bg-red-50 dark:hover:bg-red-900/30 text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 border border-transparent hover:border-red-100 dark:hover:border-red-900/50"
-                >
-                  Sohoka
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="text-slate-600 dark:text-slate-300 font-bold px-4 py-2 hover:text-teal-600 dark:hover:text-teal-400 transition-colors duration-300"
-                >
-                  Injira
-                </Link>
-                <Link
-                  to="/signup"
-                  className="bg-gradient-to-r from-teal-500 to-indigo-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-[0_4px_14px_0_rgba(20,184,166,0.3)] hover:shadow-[0_6px_20px_rgba(20,184,166,0.2)] transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  Iyandikishe
-                </Link>
-              </div>
-            )}
-
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-teal-600 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {isMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16m-7 6h7" />
-                )}
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden border-t border-slate-100 dark:border-slate-700 py-4 space-y-2 overflow-hidden"
-            >
-              <Link 
-                to="/" 
-                onClick={() => setIsMenuOpen(false)}
-                className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
-              >
-                Ahabanza
-              </Link>
+              ))}
               {user && (
                 <>
-                  <Link 
-                    to="/cart" 
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
-                  >
-                    IBYATORANYIJWE
+                  <Link to="/cart" className={linkClass('/cart')}>
+                    Ibyatoranyijwe
                   </Link>
-                  <Link 
-                    to="/orders" 
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
-                  >
+                  <Link to="/orders" className={linkClass('/orders')}>
                     Ibyo natumije
                   </Link>
-                  <Link 
-                    to="/admin" 
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block px-4 py-2.5 text-slate-600 dark:text-slate-300 hover:bg-teal-50 dark:hover:bg-slate-800 hover:text-teal-700 dark:hover:text-teal-400 font-bold rounded-lg transition-colors"
-                  >
-                    Admin Panel
+                  <Link to="/admin" className={linkClass('/admin')}>
+                    Admin
                   </Link>
                 </>
               )}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </motion.nav>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:border-emerald-300 hover:text-emerald-700 dark:border-white/10 dark:bg-white/10 dark:text-amber-200 dark:hover:text-amber-100"
+                aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+              >
+                {isDarkMode ? <FaMoon aria-hidden="true" /> : <FaSun aria-hidden="true" />}
+              </button>
+
+              {user ? (
+                <div className="hidden items-center gap-2 md:flex">
+                  <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 shadow-sm dark:border-white/10 dark:bg-white/10">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs font-black uppercase text-white">
+                      {user.name ? user.name.charAt(0) : 'U'}
+                    </span>
+                    <span className="max-w-28 truncate text-sm font-bold text-slate-700 dark:text-slate-100">
+                      {user.name ? user.name.split(' ')[0] : 'User'}
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-red-100 bg-red-50 text-red-600 hover:bg-red-100 dark:border-red-400/20 dark:bg-red-400/10 dark:text-red-200"
+                    aria-label="Sohoka"
+                  >
+                    <FaSignOutAlt aria-hidden="true" />
+                  </button>
+                </div>
+              ) : (
+                <div className="hidden items-center gap-2 md:flex">
+                  <Link to="/login" className="focus-ring rounded-full px-4 py-2 text-sm font-bold text-slate-700 hover:bg-slate-100 hover:text-emerald-800 dark:text-slate-200 dark:hover:bg-white/10">
+                    Injira
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="focus-ring inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-black text-white shadow-lg shadow-emerald-900/20 hover:bg-emerald-800"
+                  >
+                    <FaShoppingBag aria-hidden="true" />
+                    Tangira
+                  </Link>
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="focus-ring inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:text-emerald-700 dark:border-white/10 dark:bg-white/10 dark:text-slate-100 md:hidden"
+                aria-label="Fungura menu"
+                aria-expanded={isMenuOpen}
+              >
+                {isMenuOpen ? <FaTimes aria-hidden="true" /> : <FaBars aria-hidden="true" />}
+              </button>
+            </div>
+          </div>
+
+          <AnimatePresence>
+            {isMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="overflow-hidden border-t border-slate-100 py-4 dark:border-white/10 md:hidden"
+              >
+                <div className="grid gap-2">
+                  {publicLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      onClick={closeMenu}
+                      className={linkClass(link.to)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+
+                  {user && (
+                    <>
+                      <Link to="/cart" onClick={closeMenu} className={linkClass('/cart')}>
+                        Ibyatoranyijwe
+                      </Link>
+                      <Link to="/orders" onClick={closeMenu} className={linkClass('/orders')}>
+                        Ibyo natumije
+                      </Link>
+                      <Link to="/admin" onClick={closeMenu} className={linkClass('/admin')}>
+                        <span className="inline-flex items-center gap-2">
+                          <FaUserShield aria-hidden="true" />
+                          Admin
+                        </span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="focus-ring rounded-full px-4 py-2 text-left text-sm font-bold text-red-600 hover:bg-red-50 dark:text-red-200 dark:hover:bg-red-400/10"
+                      >
+                        Sohoka
+                      </button>
+                    </>
+                  )}
+
+                  {!user && (
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      <Link
+                        to="/login"
+                        onClick={closeMenu}
+                        className="focus-ring rounded-full border border-slate-200 px-4 py-3 text-center text-sm font-bold text-slate-700 dark:border-white/10 dark:text-slate-100"
+                      >
+                        Injira
+                      </Link>
+                      <Link
+                        to="/signup"
+                        onClick={closeMenu}
+                        className="focus-ring rounded-full bg-emerald-700 px-4 py-3 text-center text-sm font-black text-white"
+                      >
+                        Tangira
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.nav>
+    </>
   );
 }

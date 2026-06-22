@@ -87,7 +87,7 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-grow">
+        <main id="main-content" className="flex-grow">
           <AnimatedRoutes />
         </main>
         <Footer />

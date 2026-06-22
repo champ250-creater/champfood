@@ -1,54 +1,99 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { FaEnvelope, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 
 export default function Footer() {
   return (
     <motion.footer
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
-      // Replaced solid 'bg-dark' with a translucent dark glass effect
-     className="bg-slate-950/10 text-white py-20 px-4 border-t border-slate-800/50"
+      viewport={{ once: true }}
+      className="border-t border-emerald-900/10 bg-slate-950 text-white"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-          
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.25fr_2fr]">
           <div>
-            {/* Updated name to NTUMA */}
-            <h4 className="font-bold mb-4 uppercase">About NTUMA</h4>
-            <p className="text-gray-400 text-sm">
-              Urubuga rwawe ukunda rwo gutumiza ibiryo rukugezaho amafunguro aryoshye iwawe.
+            <Link to="/" className="focus-ring inline-flex items-center gap-3 rounded-full">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-900 p-1.5 ring-1 ring-emerald-300/25">
+                <img src="/ntuma-logo.png" alt="NTUMA" className="h-full w-full object-contain" />
+              </span>
+              <span>
+                <span className="block text-xl font-black">NTUMA</span>
+                <span className="block text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
+                  Good food mood
+                </span>
+              </span>
+            </Link>
+            <p className="mt-5 max-w-md text-sm leading-6 text-slate-300">
+              Urubuga rwo gutumiza amafunguro ruguhuza n'amaresitora yizewe,
+              rukagufasha guhitamo, kwishyura no gukurikirana ibyo watumije mu buryo bworoshye.
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="https://wa.me/250785032720"
+                className="focus-ring inline-flex items-center gap-2 rounded-full bg-emerald-500 px-4 py-2 text-sm font-black text-emerald-950 hover:bg-emerald-400"
+              >
+                <FaWhatsapp aria-hidden="true" />
+                WhatsApp
+              </a>
+              <a
+                href="mailto:aimeishimwe2023@gmail.com"
+                className="focus-ring inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm font-bold text-slate-100 hover:bg-white/10"
+              >
+                <FaEnvelope aria-hidden="true" />
+                Email
+              </a>
+            </div>
           </div>
 
-          <div>
-            <h4 className="font-bold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link to="/" className="hover:text-primary transition">Home</Link></li>
-              <li><Link to="/about" className="hover:text-primary transition">About</Link></li>
-              <li><Link to="/contact" className="hover:text-primary transition">Contact</Link></li>
-            </ul>
-          </div>
+          <div className="grid gap-8 sm:grid-cols-3">
+            <div>
+              <h4 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-emerald-300">
+                Urubuga
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li><Link to="/" className="hover:text-white">Ahabanza</Link></li>
+                <li><Link to="/about" className="hover:text-white">Ibyerekeye</Link></li>
+                <li><Link to="/contact" className="hover:text-white">Twandikire</Link></li>
+              </ul>
+            </div>
 
-          <div>
-            <h4 className="font-bold mb-4">Support</h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
-              <li><Link to="/faq" className="hover:text-primary transition">FAQ</Link></li>
-              <li><Link to="/privacy" className="hover:text-primary transition">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-primary transition">Terms</Link></li>
-            </ul>
-          </div>
+            <div>
+              <h4 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-emerald-300">
+                Ubufasha
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li><Link to="/faq" className="hover:text-white">FAQ</Link></li>
+                <li><Link to="/privacy" className="hover:text-white">Privacy Policy</Link></li>
+                <li><Link to="/terms" className="hover:text-white">Terms</Link></li>
+              </ul>
+            </div>
 
-          <div>
-            <h4 className="font-bold mb-4">Contact</h4>
-            <p className="text-gray-400 text-sm underline">aimeishimwe2023@gmail.com</p>
-            <p className="text-gray-400 text-sm">Phone: (+250) 785 032 720</p>
+            <div>
+              <h4 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-emerald-300">
+                Kontakt
+              </h4>
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li className="flex gap-2">
+                  <FaEnvelope className="mt-1 shrink-0 text-emerald-300" aria-hidden="true" />
+                  <a href="mailto:aimeishimwe2023@gmail.com" className="break-all hover:text-white">
+                    aimeishimwe2023@gmail.com
+                  </a>
+                </li>
+                <li className="flex gap-2">
+                  <FaPhoneAlt className="mt-1 shrink-0 text-emerald-300" aria-hidden="true" />
+                  <a href="tel:+250785032720" className="hover:text-white">
+                    (+250) 785 032 720
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
-
         </div>
 
-        <div className="border-t border-gray-700 pt-8 text-center text-gray-400">
-          {/* Updated name to NTUMA and made the year dynamic */}
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-slate-400 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {new Date().getFullYear()} NTUMA. All rights reserved.</p>
+          <p>Built for fast, accessible ordering across every screen.</p>
         </div>
       </div>
     </motion.footer>
