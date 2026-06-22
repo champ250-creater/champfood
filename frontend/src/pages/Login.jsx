@@ -30,7 +30,8 @@ export default function Login() {
 
     try {
       const response = await authService.login(email, password);
-      storeAuthToken(response.data.data.token, response.data.data.user);
+      // 🔥 BUG FIX: Correctly targeting the token and user data
+      storeAuthToken(response.data.token, response.data.data);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Kwinjira byanze, gerageza kongera.');
@@ -71,27 +72,28 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-dark font-semibold mb-2">Imeri</label>
+            {/* 🔥 STYLE FIX: Added text-gray-900, bg-white, and placeholder-gray-400 */}
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition text-gray-900 bg-white placeholder-gray-400"
               placeholder="champion@email.com"
             />
           </div>
 
           <div>
             <label className="block text-dark font-semibold mb-2">Ijambobanga</label>
+            {/* 🔥 STYLE FIX: Added text-gray-900, bg-white, and placeholder-gray-400 */}
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition text-gray-900 bg-white placeholder-gray-400"
               placeholder="******"
             />
           </div>
 
-          {/* NEW: Forgot Password Link added here! */}
           <div className="flex justify-end mt-1 mb-2">
             <Link 
               to="/forgot-password" 
