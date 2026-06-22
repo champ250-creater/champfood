@@ -222,7 +222,7 @@ export default function Home() {
           >
             <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-bold text-emerald-100 backdrop-blur">
               <FaUtensils aria-hidden="true" />
-              Food delivery ikorera kuri screen zose
+              Food delivery ikorera mu Rwanda
             </div>
 
             <h1 className="max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl lg:text-6xl">
