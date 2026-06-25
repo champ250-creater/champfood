@@ -30,8 +30,7 @@ export default function Login() {
 
     try {
       const response = await authService.login(email, password);
-      // 🔥 BUG FIX: Correctly targeting the token and user data
-      storeAuthToken(response.data.token, response.data.data);
+      storeAuthToken(response.data.data.token, response.data.data.user);
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Kwinjira byanze, gerageza kongera.');
@@ -56,7 +55,8 @@ export default function Login() {
         exit="exit"
         className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-md"
       >
-        <h1 className="text-3xl font-bold text-center mb-2 text-dark">Murakaza neza</h1>
+        {/* Updated to text-black */}
+        <h1 className="text-3xl font-bold text-center mb-2 text-black">Murakaza neza</h1>
         <p className="text-center text-gray-600 mb-8">Injira muri Ntuma utangire gutumiza</p>
 
         {error && (
@@ -71,25 +71,25 @@ export default function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-dark font-semibold mb-2">Imeri</label>
-            {/* 🔥 STYLE FIX: Added text-gray-900, bg-white, and placeholder-gray-400 */}
+            {/* Updated to text-black */}
+            <label className="block text-black font-semibold mb-2">Imeri</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition text-gray-900 bg-white placeholder-gray-400"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition"
               placeholder="champion@email.com"
             />
           </div>
 
           <div>
-            <label className="block text-dark font-semibold mb-2">Ijambobanga</label>
-            {/* 🔥 STYLE FIX: Added text-gray-900, bg-white, and placeholder-gray-400 */}
+            {/* Updated to text-black */}
+            <label className="block text-black font-semibold mb-2">Ijambobanga</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition text-gray-900 bg-white placeholder-gray-400"
+              className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-primary transition"
               placeholder="******"
             />
           </div>
