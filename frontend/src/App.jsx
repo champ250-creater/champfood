@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import AdminRoute from './components/AdminRoute';
 
 // Pages
+import OAuthSuccess from './pages/OAuthSuccess';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
@@ -37,6 +38,10 @@ function AnimatedRoutes() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        
+        {/* NEW: Added the OAuthSuccess Route right here! */}
+        <Route path="/oauth-success" element={<OAuthSuccess />} />
+        
         <Route path="/food/:id" element={<FoodDetails />} />
         <Route path="/about" element={<About />} />
         
