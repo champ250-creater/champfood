@@ -42,11 +42,12 @@ const formVariants = {
   }),
 };
 
+// ADDED: providerId to match backend routes
 const socialProviders = [
-  { name: 'Google', icon: FaGoogle },
-  { name: 'Facebook', icon: FaFacebookF },
-  { name: 'LinkedIn', icon: FaLinkedinIn },
-  { name: 'Apple', icon: FaApple },
+  { name: 'Google', icon: FaGoogle, providerId: 'google' },
+  { name: 'Facebook', icon: FaFacebookF, providerId: 'facebook' },
+  { name: 'LinkedIn', icon: FaLinkedinIn, providerId: 'linkedin' },
+  { name: 'Apple', icon: FaApple, providerId: 'apple' },
 ];
 
 const highlights = [
@@ -63,6 +64,12 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // ADDED: Social login redirect handler
+  const handleSocialLogin = (providerId) => {
+    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    window.location.href = `${backendUrl}/api/auth/${providerId}`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -277,6 +284,8 @@ export default function Login() {
                   <button
                     key={provider.name}
                     type="button"
+                    // ADDED: onClick handler mapped to provider.providerId
+                    onClick={() => handleSocialLogin(provider.providerId)}
                     className="focus-ring flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg text-slate-700 shadow-sm hover:border-emerald-300 hover:text-emerald-700 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:border-emerald-400/50"
                     aria-label={`Continue with ${provider.name}`}
                     title={provider.name}
