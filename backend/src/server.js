@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
+import passport from 'passport'; // NEW: Import passport
+
+import './config/passport.js'; // NEW: Import your Google strategy configuration
+
 import authRoutes from './routes/authRoutes.js';
 import foodRoutes from './routes/foodRoutes.js';
 import cartRoutes from './routes/cartRoutes.js';
@@ -21,6 +25,9 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// NEW: Initialize Passport (Must be after express.json and cors, but before routes)
+app.use(passport.initialize());
 
 // Health check
 app.get('/health', (req, res) => {
