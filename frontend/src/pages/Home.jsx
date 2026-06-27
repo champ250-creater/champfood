@@ -577,8 +577,7 @@ export default function Home() {
           <div className="flex items-start gap-3">
             <FaCheckCircle className="mt-1 shrink-0 text-emerald-700 dark:text-emerald-300" aria-hidden="true" />
             <p className="text-sm font-bold leading-6">
-              Urubuga rwavuguruwe rushingiye kuri responsive design, accessibility,
-              SEO metadata, security headers na performance monitoring ishobora guhuzwa na analytics endpoint.
+              Urubuga rwizewe ngo ruguhe serivisi nziza, zihuse kandi zizewe. Tworoheje uburyo bwo gushaka no gutumiza amafunguro kugira ngo ibyo ukunda bikugereho vuba kandi neza.
             </p>
           </div>
           <Link
