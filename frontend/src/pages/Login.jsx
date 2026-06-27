@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  FaApple,
   FaEnvelope,
   FaExclamationCircle,
   FaEye,
   FaEyeSlash,
-  FaFacebookF,
   FaGoogle,
-  FaLinkedinIn,
   FaLock,
   FaShieldAlt,
   FaShoppingBag,
@@ -42,13 +39,7 @@ const formVariants = {
   }),
 };
 
-// ADDED: providerId to match backend routes
-const socialProviders = [
-  { name: 'Google', icon: FaGoogle, providerId: 'google' },
-  { name: 'Facebook', icon: FaFacebookF, providerId: 'facebook' },
-  { name: 'LinkedIn', icon: FaLinkedinIn, providerId: 'linkedin' },
-  { name: 'Apple', icon: FaApple, providerId: 'apple' },
-];
+
 
 const highlights = [
   { icon: FaTruck, label: 'Quick delivery' },
@@ -65,12 +56,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // ADDED: Social login redirect handler
-  const handleSocialLogin = (providerId) => {
+  const handleGoogleLogin = () => {
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-    // Remove trailing /api if present so we don't get /api/api/auth/
     const backendUrl = apiUrl.replace(/\/api\/?$/, '');
-    window.location.href = `${backendUrl}/api/auth/${providerId}`;
+    window.location.href = `${backendUrl}/api/auth/google`;
   };
 
   const handleSubmit = async (e) => {
@@ -113,6 +102,7 @@ export default function Login() {
       <div className="absolute inset-x-0 top-0 -z-10 h-32 bg-gradient-to-b from-black/35 to-transparent" />
 
       <div className="mx-auto grid min-h-[calc(100vh-5rem)] w-full max-w-7xl items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+        {/* Left hero panel */}
         <motion.div
           initial={{ opacity: 0, x: -24 }}
           animate={{ opacity: 1, x: 0 }}
@@ -144,6 +134,7 @@ export default function Login() {
           </div>
         </motion.div>
 
+        {/* Right form panel */}
         <motion.div
           variants={pageVariants}
           initial="initial"
@@ -189,7 +180,7 @@ export default function Login() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="focus-ring h-[52px] w-full rounded-lg border border-slate-200 bg-slate-50 pl-12 pr-4 text-base font-semibold text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white dark:border-white/10 dark:bg-slate-950/70 dark:text-white dark:focus:border-emerald-400"
+                    className="h-[52px] w-full rounded-lg border border-slate-200 bg-slate-50 pl-12 pr-4 text-base font-semibold text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white dark:border-white/10 dark:bg-slate-950/70 dark:text-white dark:focus:border-emerald-400"
                     placeholder="champion@email.com"
                     autoComplete="email"
                     required
@@ -211,15 +202,15 @@ export default function Login() {
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="focus-ring h-[52px] w-full rounded-lg border border-slate-200 bg-slate-50 pl-12 pr-12 text-base font-semibold text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white dark:border-white/10 dark:bg-slate-950/70 dark:text-white dark:focus:border-emerald-400"
+                    className="h-[52px] w-full rounded-lg border border-slate-200 bg-slate-50 pl-12 pr-12 text-base font-semibold text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white dark:border-white/10 dark:bg-slate-950/70 dark:text-white dark:focus:border-emerald-400"
                     placeholder="Andika ijambobanga"
                     autoComplete="current-password"
                     required
                   />
                   <button
                     type="button"
-                    onClick={() => setShowPassword((value) => !value)}
-                    className="focus-ring absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 inline-flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white"
                     aria-label={showPassword ? 'Hide password' : 'Show password'}
                   >
                     {showPassword ? <FaEyeSlash aria-hidden="true" /> : <FaEye aria-hidden="true" />}
@@ -245,7 +236,7 @@ export default function Login() {
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="focus-ring rounded-lg text-sm font-black text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
+                  className="rounded-lg text-sm font-black text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
                 >
                   Wibagiwe ijambobanga?
                 </Link>
@@ -260,7 +251,7 @@ export default function Login() {
                 whileTap={!loading ? { scale: 0.98 } : {}}
                 type="submit"
                 disabled={loading}
-                className="focus-ring flex h-[52px] w-full items-center justify-center rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 px-5 text-base font-black text-white shadow-lg shadow-emerald-900/20 hover:from-emerald-700 hover:to-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
+                className="flex h-[52px] w-full items-center justify-center rounded-lg bg-gradient-to-r from-emerald-600 to-teal-600 px-5 text-base font-black text-white shadow-lg shadow-emerald-900/20 hover:from-emerald-700 hover:to-teal-700 disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {loading ? (
                   <span className="inline-flex items-center gap-3">
@@ -273,30 +264,24 @@ export default function Login() {
               </motion.button>
             </form>
 
-            <div className="my-4 flex items-center gap-3">
+            {/* Divider */}
+            <div className="my-5 flex items-center gap-3">
               <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-              <span className="text-sm font-black text-slate-400">or continue with</span>
+              <span className="text-xs font-black text-slate-400 uppercase tracking-wider">or continue with</span>
               <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
             </div>
 
-            <div className="grid grid-cols-4 gap-3">
-              {socialProviders.map((provider) => {
-                const Icon = provider.icon;
-                return (
-                  <button
-                    key={provider.name}
-                    type="button"
-                    // ADDED: onClick handler mapped to provider.providerId
-                    onClick={() => handleSocialLogin(provider.providerId)}
-                    className="focus-ring flex h-11 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg text-slate-700 shadow-sm hover:border-emerald-300 hover:text-emerald-700 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:border-emerald-400/50"
-                    aria-label={`Continue with ${provider.name}`}
-                    title={provider.name}
-                  >
-                    <Icon aria-hidden="true" />
-                  </button>
-                );
-              })}
-            </div>
+            {/* Google OAuth — single full-width button */}
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={handleGoogleLogin}
+              className="flex h-[52px] w-full items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white text-sm font-bold text-slate-700 shadow-sm hover:border-red-400 hover:text-red-600 hover:shadow-md transition-all duration-200 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:border-red-400/60"
+            >
+              <FaGoogle aria-hidden="true" className="text-lg" />
+              Continue with Google
+            </motion.button>
 
             <p className="mt-5 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
               Ntabwo ufite konti?{' '}
