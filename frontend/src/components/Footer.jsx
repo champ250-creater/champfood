@@ -71,7 +71,7 @@ export default function Footer() {
 
             <div>
               <h4 className="mb-4 text-sm font-black uppercase tracking-[0.16em] text-emerald-300">
-                Kontakt
+                Contact
               </h4>
               <ul className="space-y-3 text-sm text-slate-300">
                 <li className="flex gap-2">
