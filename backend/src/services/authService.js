@@ -1,10 +1,8 @@
 import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
-import crypto from 'crypto'; 
-import { Resend } from 'resend'; 
-
-// 🚨 Notice we REMOVED the "const resend = new Resend..." from up here! 🚨
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 class AuthService {
   // --- SIGNUP ---
@@ -61,11 +59,11 @@ class AuthService {
         error.status = 404;
         throw error;
       }
-      
+
       const user = userResult.rows[0];
       const resetToken = crypto.randomBytes(32).toString('hex');
       const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-      const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
+      const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
 
       // Save token to DB
       await pool.query(
@@ -75,27 +73,39 @@ class AuthService {
 
       const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-      // ✅ ADDED IT HERE: Now it only asks for the API key when someone actually clicks "forgot password"
-      const resend = new Resend(process.env.RESEND_API_KEY);
+      // Create Nodemailer transporter using Gmail credentials from .env
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USERNAME,
+          pass: process.env.EMAIL_PASSWORD, // Gmail App Password (spaces are fine, nodemailer handles them)
+        },
+      });
 
-      // SEND REAL EMAIL VIA API
-      await resend.emails.send({
-        from: 'onboarding@resend.dev', 
-        to: email, 
+      // Send the password reset email
+      await transporter.sendMail({
+        from: process.env.EMAIL_FROM || `TechBite Kigali <${process.env.EMAIL_USERNAME}>`,
+        to: email,
         subject: 'TechBite Kigali - Password Reset Request',
         html: `
-          <div style="font-family: sans-serif; padding: 20px;">
+          <div style="font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #20c269;">TechBite Kigali</h2>
             <h3>Hello ${user.name},</h3>
-            <p>You requested a password reset for TechBite. Click the button below to continue.</p>
-            <a href="${resetURL}" style="padding: 10px 20px; background-color: #20c269; color: white; text-decoration: none; border-radius: 5px; display: inline-block;">Reset Password</a>
-            <p style="margin-top: 20px;">This link is valid for 15 minutes.</p>
+            <p>You requested a password reset for your TechBite account. Click the button below to set a new password.</p>
+            <a href="${resetURL}" style="display: inline-block; padding: 12px 24px; background-color: #20c269; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; margin: 16px 0;">
+              Reset My Password
+            </a>
+            <p style="color: #666; margin-top: 20px;">This link is valid for <strong>15 minutes</strong>. If you did not request this, please ignore this email.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 24px 0;" />
+            <p style="color: #999; font-size: 12px;">TechBite Kigali &mdash; Food Ordering Platform</p>
           </div>
-        `
+        `,
       });
 
       return { success: true, message: 'Email sent successfully!' };
 
     } catch (error) {
+      console.error('Password reset email error:', error);
       throw error;
     }
   }
@@ -123,7 +133,7 @@ class AuthService {
 
       await pool.query(
         'UPDATE users SET password = $1, reset_password_token = NULL, reset_password_expires = NULL WHERE id = $2',
-        [hashedPassword, user.id] 
+        [hashedPassword, user.id]
       );
 
       return { success: true, message: 'Password updated successfully!' };
