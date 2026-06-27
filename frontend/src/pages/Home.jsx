@@ -68,7 +68,6 @@ const fallbackFoods = [
 
 const stats = [
   { value: '30 min', label: 'Impuzandengo yo kugeza ibyo watumije' },
-  { value: '500+', label: 'Abakiriya batumiza neza' },
   { value: '24/7', label: 'Ubufasha kuri telefoni na WhatsApp' },
 ];
 
@@ -128,6 +127,24 @@ const resources = [
     text: 'Tanga location isobanutse, telefoni ikora n amakuru yose akenewe ku delivery.',
   },
 ];
+
+function LiveClock() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="rounded-lg bg-white/10 p-4">
+      <div className="text-2xl font-black text-amber-300">
+        {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
+      </div>
+      <p className="mt-1 text-xs font-semibold leading-5 text-slate-200">Isaha yo mu gihugu</p>
+    </div>
+  );
+}
 
 export default function Home() {
   const [foods, setFoods] = useState([]);
@@ -293,12 +310,15 @@ export default function Home() {
               />
             </div>
             <div className="mt-5 grid gap-3 sm:grid-cols-3">
-              {stats.map((stat) => (
-                <div key={stat.label} className="rounded-lg bg-white/10 p-4">
-                  <div className="text-2xl font-black text-amber-300">{stat.value}</div>
-                  <p className="mt-1 text-xs font-semibold leading-5 text-slate-200">{stat.label}</p>
-                </div>
-              ))}
+              <div key={stats[0].label} className="rounded-lg bg-white/10 p-4">
+                <div className="text-2xl font-black text-amber-300">{stats[0].value}</div>
+                <p className="mt-1 text-xs font-semibold leading-5 text-slate-200">{stats[0].label}</p>
+              </div>
+              <LiveClock />
+              <div key={stats[1].label} className="rounded-lg bg-white/10 p-4">
+                <div className="text-2xl font-black text-amber-300">{stats[1].value}</div>
+                <p className="mt-1 text-xs font-semibold leading-5 text-slate-200">{stats[1].label}</p>
+              </div>
             </div>
           </motion.div>
         </div>
