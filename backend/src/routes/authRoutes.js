@@ -15,7 +15,7 @@ router.post('/login', AuthController.login);
 // 2. PASSWORD RESET ROUTES
 // ──────────────────────────────────────────────────────────────
 router.post('/forgot-password', AuthController.forgotPassword);
-router.post('/reset-password/:token', AuthController.resetPassword);
+router.post('/reset-password', AuthController.resetPassword);
 
 // ──────────────────────────────────────────────────────────────
 // 3. GOOGLE OAUTH

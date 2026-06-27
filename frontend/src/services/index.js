@@ -10,8 +10,8 @@ export const authService = {
     apiClient.post('/auth/login', { email, password }),
   forgotPassword: (email) =>
     apiClient.post('/auth/forgot-password', { email }),
-  resetPassword: (token, password) =>
-    apiClient.post(`/auth/reset-password/${token}`, { password }),
+  resetPassword: (otp, password, email) =>
+    apiClient.post('/auth/reset-password', { email, otp, password }),
 };
 
 // Food APIs

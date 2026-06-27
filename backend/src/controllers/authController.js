@@ -1,12 +1,11 @@
 import AuthService from '../services/authService.js';
 
 class AuthController {
-  // --- EXISTING SIGNUP ---
+  // ─── SIGNUP ────────────────────────────────────────────────
   static async signup(req, res, next) {
     try {
       const { email, password, name } = req.body;
 
-      // Validate input
       if (!email || !password || !name) {
         return res.status(400).json({
           success: false,
@@ -26,12 +25,11 @@ class AuthController {
     }
   }
 
-  // --- EXISTING LOGIN ---
+  // ─── LOGIN ─────────────────────────────────────────────────
   static async login(req, res, next) {
     try {
       const { email, password } = req.body;
 
-      // Validate input
       if (!email || !password) {
         return res.status(400).json({
           success: false,
@@ -51,7 +49,7 @@ class AuthController {
     }
   }
 
-  // --- NEW: FORGOT PASSWORD ---
+  // ─── FORGOT PASSWORD (Send OTP) ───────────────────────────
   static async forgotPassword(req, res, next) {
     try {
       const { email } = req.body;
@@ -59,64 +57,58 @@ class AuthController {
       if (!email) {
         return res.status(400).json({
           success: false,
-          message: 'Email irakenewe (Email is required)',
+          message: 'Email is required',
         });
       }
 
-      // Call the service to generate the token and send the email
-      await AuthService.generatePasswordReset(email);
+      await AuthService.sendPasswordResetOTP(email);
 
       res.status(200).json({
         success: true,
-        message: 'Link yoherejwe kuri email yawe (Reset link sent to your email)',
+        message: 'OTP yoherejwe kuri email yawe (OTP sent to your email)',
       });
     } catch (error) {
-      // If the user isn't found (404), we still send a success message for security reasons
-      // so hackers can't use this form to guess which emails are registered.
+      // If user not found (404), still return success for security
       if (error.status === 404) {
-         return res.status(200).json({
+        return res.status(200).json({
           success: true,
-          message: 'Niba email ibaho, twakohereje link (If the email exists, a link was sent)',
+          message: 'Niba email ibaho, OTP yakoherejwe (If the email exists, an OTP was sent)',
         });
       }
       next(error);
     }
   }
 
-  // --- NEW: RESET PASSWORD ---
+  // ─── RESET PASSWORD (Verify OTP + Set New Password) ───────
   static async resetPassword(req, res, next) {
     try {
-      // The token comes from the URL parameters, the new password comes from the form body
-      const { token } = req.params;
-      const { password } = req.body;
+      const { email, otp, password } = req.body;
 
-      if (!password) {
+      if (!email || !otp || !password) {
         return res.status(400).json({
           success: false,
-          message: 'Ijambo ryibanga rishya rirakenewe (New password is required)',
+          message: 'Email, OTP code, and new password are required',
         });
       }
 
       if (password.length < 6) {
         return res.status(400).json({
           success: false,
-          message: 'Ijambo ryibanga rigomba kugira inyuguti byibura 6 (Password must be at least 6 characters)',
+          message: 'Password must be at least 6 characters',
         });
       }
 
-      // Call the service to verify the token and update the database
-      await AuthService.resetPassword(token, password);
+      await AuthService.verifyOTPAndResetPassword(email, otp, password);
 
       res.status(200).json({
         success: true,
         message: 'Ijambo ryibanga ryahinduwe neza! (Password changed successfully!)',
       });
     } catch (error) {
-      // Catch expired or invalid tokens
       if (error.status === 400) {
         return res.status(400).json({
           success: false,
-          message: 'Link yakoreshejwe cyangwa yarengeje igihe (Link is invalid or has expired)',
+          message: error.message,
         });
       }
       next(error);

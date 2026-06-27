@@ -2,18 +2,32 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto';
-import sgMail from '@sendgrid/mail';
+import nodemailer from 'nodemailer';
 
 // ─────────────────────────────────────────────────────────────
-// Initialize SendGrid
+// Email transporter (Gmail + forced IPv4 to avoid Render IPv6 issues)
 // ─────────────────────────────────────────────────────────────
-const SENDGRID_KEY = process.env.SENDGRID_API_KEY || 'wH8Q4t910iIrghATn8u0eNyQe8t5Jamo';
-sgMail.setApiKey(SENDGRID_KEY);
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com',
+    pass: process.env.EMAIL_PASSWORD || 'fhstinrwexhedajl',
+  },
+  // CRITICAL: Force IPv4 — Render cannot reach Google SMTP over IPv6
+  tls: { rejectUnauthorized: false },
+  dnsOptions: { family: 4 },
+});
 
-// Log whether the key looks valid (SendGrid keys always start with "SG.")
-if (!SENDGRID_KEY.startsWith('SG.')) {
-  console.warn('⚠️  WARNING: Your SENDGRID_API_KEY does not start with "SG." — emails will likely fail.');
-  console.warn('   Go to https://app.sendgrid.com/settings/api_keys to create a valid key.');
+// Verify connection on startup
+transporter.verify()
+  .then(() => console.log('✅ Email transporter is ready (Gmail / IPv4)'))
+  .catch((err) => console.error('❌ Email transporter error:', err.message));
+
+// ─────────────────────────────────────────────────────────────
+// Generate a 6-digit OTP
+// ─────────────────────────────────────────────────────────────
+function generateOTP() {
+  return crypto.randomInt(100000, 999999).toString();
 }
 
 class AuthService {
@@ -70,13 +84,12 @@ class AuthService {
     };
   }
 
-  // ─── GENERATE PASSWORD RESET ───────────────────────────────
-  static async generatePasswordReset(email) {
+  // ─── SEND OTP FOR PASSWORD RESET ──────────────────────────
+  static async sendPasswordResetOTP(email) {
     // 1. Find the user
     const userResult = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userResult.rows.length === 0) {
-      // For security, we DON'T tell the client the email doesn't exist.
-      // The controller handles this by returning a fake success.
+      // Security: don't reveal whether the email exists
       const error = new Error('User not found');
       error.status = 404;
       throw error;
@@ -84,84 +97,79 @@ class AuthService {
 
     const user = userResult.rows[0];
 
-    // 2. Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
-    const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+    // 2. Generate 6-digit OTP
+    const otp = generateOTP();
+    const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // 3. Save token to database
+    // 3. Save hashed OTP to DB (reusing reset_password_token / reset_password_expires columns)
     await pool.query(
       'UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3',
-      [hashedToken, expiresAt, email]
+      [hashedOTP, expiresAt, email]
     );
 
-    // 4. Build the reset URL
-    const frontendUrl = process.env.FRONTEND_URL || 'https://ntuma.vercel.app';
-    const resetURL = `${frontendUrl}/reset-password/${resetToken}`;
-
-    // 5. Build the email
-    const fromEmail = process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com';
-    const msg = {
+    // 4. Send OTP email via Gmail
+    const mailOptions = {
+      from: `"NTUMA" <${process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com'}>`,
       to: email,
-      from: fromEmail,
-      subject: 'NTUMA - Password Reset Request',
+      subject: 'NTUMA - Your Password Reset Code',
       html: `
-        <div style="font-family: 'Segoe UI', sans-serif; padding: 20px; max-width: 600px; margin: 0 auto; background-color: #f8fafc; border-radius: 12px;">
-          <div style="text-align: center; padding: 20px 0;">
-            <h2 style="color: #10b981; margin: 0;">NTUMA</h2>
-            <p style="color: #64748b; font-size: 14px; margin-top: 4px;">Food Ordering Platform</p>
+        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 500px; margin: 0 auto; background: #f8fafc; border-radius: 16px; overflow: hidden;">
+          <div style="background: linear-gradient(135deg, #10b981, #14b8a6); padding: 32px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px; letter-spacing: 1px;">NTUMA</h1>
+            <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0; font-size: 14px;">Food Ordering Platform</p>
           </div>
-          <div style="background: white; border-radius: 8px; padding: 24px; border: 1px solid #e2e8f0;">
-            <h3 style="color: #1e293b; margin-top: 0;">Hello ${user.name || 'there'},</h3>
-            <p style="color: #475569; line-height: 1.6;">You requested a password reset. Click the button below to set a new password:</p>
-            <div style="text-align: center; margin: 24px 0;">
-              <a href="${resetURL}" style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #10b981, #14b8a6); color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 16px;">
-                Reset My Password
-              </a>
+          <div style="padding: 32px;">
+            <h2 style="color: #1e293b; margin: 0 0 8px;">Hello ${user.name || 'there'} 👋</h2>
+            <p style="color: #64748b; line-height: 1.6; margin: 0 0 24px;">You requested a password reset. Use this code to verify your identity:</p>
+            <div style="background: #1e293b; border-radius: 12px; padding: 24px; text-align: center; margin: 0 0 24px;">
+              <span style="font-size: 36px; font-weight: bold; letter-spacing: 8px; color: #10b981; font-family: 'Courier New', monospace;">${otp}</span>
             </div>
-            <p style="color: #94a3b8; font-size: 13px;">This link expires in <strong>15 minutes</strong>. If you didn't request this, ignore this email.</p>
-            <p style="color: #94a3b8; font-size: 13px;">Or copy this link: <br/><a href="${resetURL}" style="color: #10b981; word-break: break-all;">${resetURL}</a></p>
+            <p style="color: #94a3b8; font-size: 13px; margin: 0 0 8px;">⏱ This code expires in <strong>10 minutes</strong>.</p>
+            <p style="color: #94a3b8; font-size: 13px; margin: 0;">If you didn't request this, please ignore this email.</p>
           </div>
-          <p style="color: #cbd5e1; font-size: 11px; text-align: center; margin-top: 16px;">NTUMA &mdash; Food Ordering Platform</p>
+          <div style="border-top: 1px solid #e2e8f0; padding: 16px 32px; text-align: center;">
+            <p style="color: #cbd5e1; font-size: 11px; margin: 0;">NTUMA &mdash; Kigali, Rwanda</p>
+          </div>
         </div>
       `,
     };
 
-    // 6. Try to send the email — NEVER crash the endpoint even if SendGrid fails
     try {
-      console.log(`📧 Sending password reset email to ${email} from ${fromEmail}...`);
-      await sgMail.send(msg);
-      console.log(`✅ Password reset email sent successfully to ${email}`);
+      console.log(`📧 Sending OTP to ${email}...`);
+      await transporter.sendMail(mailOptions);
+      console.log(`✅ OTP sent successfully to ${email}`);
     } catch (emailError) {
-      // Log the FULL error so you can see it in Render logs
-      console.error('❌ SendGrid email failed:');
-      console.error('   Status:', emailError?.code || emailError?.response?.statusCode || 'unknown');
-      console.error('   Message:', emailError?.message || 'unknown');
-      if (emailError?.response?.body) {
-        console.error('   Body:', JSON.stringify(emailError.response.body, null, 2));
-      }
-      // DO NOT re-throw — we still return success so the UI works
+      console.error('❌ Email send failed:', emailError.message);
+      console.error('   Code:', emailError.code || 'unknown');
+      // Don't crash — let the controller handle it
+      const error = new Error('Failed to send OTP email. Please try again.');
+      error.status = 500;
+      throw error;
     }
 
-    return { success: true, message: 'If the email exists, a reset link was sent.' };
+    return { success: true, message: 'OTP sent to your email.' };
   }
 
-  // ─── RESET PASSWORD ────────────────────────────────────────
-  static async resetPassword(token, newPassword) {
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+  // ─── VERIFY OTP & RESET PASSWORD ──────────────────────────
+  static async verifyOTPAndResetPassword(email, otp, newPassword) {
+    // 1. Hash the OTP the user entered
+    const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
     const currentTime = new Date();
 
+    // 2. Find user with matching OTP that hasn't expired
     const userResult = await pool.query(
-      'SELECT * FROM users WHERE reset_password_token = $1 AND reset_password_expires > $2',
-      [hashedToken, currentTime]
+      'SELECT * FROM users WHERE email = $1 AND reset_password_token = $2 AND reset_password_expires > $3',
+      [email, hashedOTP, currentTime]
     );
 
     if (userResult.rows.length === 0) {
-      const error = new Error('Token is invalid or has expired');
+      const error = new Error('Invalid or expired OTP code');
       error.status = 400;
       throw error;
     }
 
+    // 3. Update the password
     const user = userResult.rows[0];
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
