@@ -34,9 +34,9 @@ router.get('/google/callback',
       // Authentication succeeded!
       const user = req.user;
       
-      // Generate the digital ID card (JWT)
+      // Generate the digital ID card (JWT) - use same shape as generateToken: { userId, email }
       const token = jwt.sign(
-        { id: user.id, email: user.email }, 
+        { userId: user.id, email: user.email }, 
         process.env.JWT_SECRET, 
         { expiresIn: '7d' } 
       );
