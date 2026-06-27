@@ -2,9 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
-import passport from 'passport'; // NEW: Import passport
+import passport from 'passport';
 
-import './config/passport.js'; // NEW: Import your Google strategy configuration
+import './config/passport.js';
 
 import authRoutes from './routes/authRoutes.js';
 import foodRoutes from './routes/foodRoutes.js';
@@ -18,23 +18,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 🔥 AUTOMATIC MIGRATION: Ensure all new columns exist on startup (especially for Render)
-import pool from './config/database.js';
-pool.query(`
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255);
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expires TIMESTAMP;
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500);
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR(100);
-  ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT;
-`).then(() => console.log('✅ Auto-migration: All database columns verified'))
-  .catch(err => console.error('❌ Auto-migration failed:', err.message));
-
 // Middleware
 app.use(helmet());
 
-// 🔥 THE BUG FIX IS HERE: We are using an array to allow BOTH links!
+// CORS configuration
 app.use(cors({
   origin: ['http://localhost:5173', 'https://ntuma.vercel.app'],
   credentials: true,
@@ -43,7 +30,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// NEW: Initialize Passport (Must be after express.json and cors, but before routes)
+// Initialize Passport
 app.use(passport.initialize());
 
 // Health check
@@ -69,10 +56,33 @@ app.use((req, res) => {
 // Error handler
 app.use(errorHandler);
 
-// Start server
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
-});
+// 🔥 AUTOMATIC MIGRATION: Ensure all new columns exist on startup (especially for Render)
+import pool from './config/database.js';
+
+const startServer = async () => {
+  try {
+    await pool.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expires TIMESTAMP;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR(100);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT;
+    `);
+    console.log('✅ Auto-migration: All database columns verified');
+    
+    // Start server ONLY after migration is complete
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
+    });
+  } catch (err) {
+    console.error('❌ Auto-migration failed:', err.message);
+    process.exit(1);
+  }
+};
+
+startServer();
 
 export default app;
