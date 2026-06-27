@@ -18,15 +18,17 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// 🔥 AUTOMATIC MIGRATION: Ensure profile columns exist on startup (especially for Render)
+// 🔥 AUTOMATIC MIGRATION: Ensure all new columns exist on startup (especially for Render)
 import pool from './config/database.js';
 pool.query(`
+  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255);
+  ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expires TIMESTAMP;
   ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
   ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
   ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500);
   ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR(100);
   ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT;
-`).then(() => console.log('✅ Auto-migration: Profile columns verified'))
+`).then(() => console.log('✅ Auto-migration: All database columns verified'))
   .catch(err => console.error('❌ Auto-migration failed:', err.message));
 
 // Middleware
