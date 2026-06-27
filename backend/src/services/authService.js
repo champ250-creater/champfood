@@ -2,7 +2,10 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
+
+// Initialize Resend with the provided key (or env variable as fallback)
+const resend = new Resend(process.env.RESEND_API_KEY || 're_EyL5hEVF_MLy6x5kF6PoSrvgCzBKV1cfE');
 
 class AuthService {
   // --- SIGNUP ---
@@ -73,18 +76,10 @@ class AuthService {
 
       const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-      // Create Nodemailer transporter using Gmail credentials from .env
-      const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: process.env.EMAIL_USERNAME,
-          pass: process.env.EMAIL_PASSWORD, // Gmail App Password (spaces are fine, nodemailer handles them)
-        },
-      });
-
-      // Send the password reset email
-      await transporter.sendMail({
-        from: process.env.EMAIL_FROM || `TechBite Kigali <${process.env.EMAIL_USERNAME}>`,
+      // Send the password reset email using Resend API
+      // Note: 'onboarding@resend.dev' is the default testing sender.
+      const { data, error } = await resend.emails.send({
+        from: 'TechBite <onboarding@resend.dev>',
         to: email,
         subject: 'TechBite Kigali - Password Reset Request',
         html: `
@@ -101,6 +96,10 @@ class AuthService {
           </div>
         `,
       });
+
+      if (error) {
+        throw new Error(error.message);
+      }
 
       return { success: true, message: 'Email sent successfully!' };
 
