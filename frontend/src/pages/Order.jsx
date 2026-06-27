@@ -199,6 +199,10 @@ export default function Order() {
                 <span>Kugeza aho uri</span>
                 <span>{formatPrice(orderData.delivery)}</span>
               </div>
+              <div className="flex justify-between">
+                <span>Umusoro (10%)</span>
+                <span>{formatPrice(orderData.tax)}</span>
+              </div>
               <div className="flex justify-between font-bold text-lg border-t pt-3">
                 <span>Igiteranyo cyose</span>
                 <span className="text-primary">{formatPrice(orderData.total)}</span>
