@@ -105,6 +105,17 @@ export default function Profile() {
         setInfoForm({ name: p.name || '', phone: p.phone || '', bio: p.bio || '' });
         setAddressForm({ city: p.city || '', address: p.address || '' });
         setOrders(ordersRes.data.data || []);
+        
+        // Sync localStorage with fetched profile data
+        const storedUser = getStoredUser();
+        if (storedUser) {
+          localStorage.setItem('user', JSON.stringify({ 
+            ...storedUser, 
+            name: p.name || storedUser.name,
+            avatar_url: p.avatar_url || storedUser.avatar_url
+          }));
+          window.dispatchEvent(new Event('storage'));
+        }
       } catch {
         showToast('Failed to load profile', 'error');
       } finally {
@@ -161,7 +172,16 @@ export default function Profile() {
       const fd = new FormData();
       fd.append('avatar', file);
       const res = await profileService.updateAvatar(fd);
-      setProfile(prev => ({ ...prev, avatar_url: res.data.data.avatar_url }));
+      const newAvatarUrl = res.data.data.avatar_url;
+      setProfile(prev => ({ ...prev, avatar_url: newAvatarUrl }));
+      
+      // Update localStorage so Navbar reflects new avatar
+      const storedUser = getStoredUser();
+      if (storedUser) {
+        localStorage.setItem('user', JSON.stringify({ ...storedUser, avatar_url: newAvatarUrl }));
+        window.dispatchEvent(new Event('storage'));
+      }
+      
       showToast('Avatar updated!');
     } catch {
       showToast('Avatar upload failed', 'error');
