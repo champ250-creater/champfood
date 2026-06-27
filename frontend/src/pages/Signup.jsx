@@ -2,14 +2,11 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  FaApple,
   FaEnvelope,
   FaExclamationCircle,
   FaEye,
   FaEyeSlash,
-  FaFacebookF,
   FaGoogle,
-  FaLinkedinIn,
   FaLock,
   FaShieldAlt,
   FaShoppingBag,
