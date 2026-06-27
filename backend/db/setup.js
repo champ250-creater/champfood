@@ -16,6 +16,8 @@ const setupDatabase = async () => {
         email VARCHAR(255) UNIQUE NOT NULL,
         password VARCHAR(255) NOT NULL,
         name VARCHAR(255) NOT NULL,
+        reset_password_token VARCHAR(255),
+        reset_password_expires TIMESTAMP,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -43,6 +45,8 @@ const setupDatabase = async () => {
         description TEXT,
         price DECIMAL(10, 2) NOT NULL,
         image VARCHAR(255),
+        image_url VARCHAR(255),
+        category VARCHAR(100) DEFAULT 'Local Dishes',
         rating DECIMAL(3, 2),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -66,6 +70,7 @@ const setupDatabase = async () => {
         user_id INT NOT NULL REFERENCES users(id),
         total_price DECIMAL(10, 2) NOT NULL,
         status VARCHAR(50) DEFAULT 'pending',
+        delivery_location TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
@@ -81,6 +86,15 @@ const setupDatabase = async () => {
         price DECIMAL(10, 2) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
+    `);
+
+    // Add missing columns to existing tables (safe to run multiple times)
+    await client.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_token VARCHAR(255);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_password_expires TIMESTAMP;
+      ALTER TABLE foods ADD COLUMN IF NOT EXISTS image_url VARCHAR(255);
+      ALTER TABLE foods ADD COLUMN IF NOT EXISTS category VARCHAR(100) DEFAULT 'Local Dishes';
+      ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_location TEXT;
     `);
 
     console.log('✅ Database tables created successfully!');
