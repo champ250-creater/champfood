@@ -41,3 +41,15 @@ export const orderService = {
   getOrders: () => apiClient.get('/orders'),
   getOrderById: (id) => apiClient.get(`/orders/${id}`),
 };
+
+// Profile APIs
+export const profileService = {
+  getProfile: () => apiClient.get('/profile'),
+  updateProfile: (data) => apiClient.put('/profile', data),
+  updateAvatar: (formData) =>
+    apiClient.put('/profile/avatar', formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+  changePassword: (currentPassword, newPassword) =>
+    apiClient.put('/profile/password', { currentPassword, newPassword }),
+  getOrderHistory: () => apiClient.get('/profile/orders'),
+  deleteAccount: () => apiClient.delete('/profile'),
+};

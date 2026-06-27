@@ -23,7 +23,8 @@ import Terms from './pages/Terms';
 import Privacy from './pages/Privacy'; 
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
-import AdminDashboard from './pages/AdminDashboard'; 
+import AdminDashboard from './pages/AdminDashboard';
+import Profile from './pages/Profile';
 
 import './index.css';
 
@@ -65,6 +66,11 @@ function AnimatedRoutes() {
         <Route path="/orders" element={
           <ProtectedRoute>
             <Orders />
+          </ProtectedRoute>
+        } />
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         } />
         
