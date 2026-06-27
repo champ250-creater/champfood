@@ -1,18 +1,12 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
-// CHANGE THIS TO YOUR RENDER URL WHEN YOU DEPLOY TO VERCEL
-// Remove this:
-// const API_URL = 'http://localhost:5000/api/auth';
-
-// Add your live Render URL:
-const API_URL = 'https://champfood.onrender.com/api/auth';
+import { authService } from '../services';
 
 export default function ResetPassword() {
-  const { token } = useParams(); // Grabs the token from the URL automatically!
+  const { token } = useParams();
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState('idle'); // 'idle', 'loading', 'success', 'error'
+  const [status, setStatus] = useState('idle');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e) => {
@@ -21,23 +15,12 @@ export default function ResetPassword() {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/reset-password/${token}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Habaye ikibazo (Something went wrong)');
-      }
-
+      const response = await authService.resetPassword(token, password);
       setStatus('success');
-      setMessage(data.message);
+      setMessage(response.data.message || 'Ijambo ryibanga ryahinduwe neza!');
     } catch (error) {
       setStatus('error');
-      setMessage(error.message);
+      setMessage(error.response?.data?.message || 'Habaye ikibazo (Something went wrong)');
     }
   };
 
@@ -102,4 +85,4 @@ export default function ResetPassword() {
       </motion.div>
     </div>
   );
-}                     
+}

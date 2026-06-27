@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { orderService } from '../services';
@@ -52,7 +52,7 @@ export default function Order() {
       (position) => {
         const { latitude, longitude } = position.coords;
         // FIXED: Generates a proper, clickable Google Maps pin
-        const mapsLink = `https://www.google.com/maps?q=$${latitude},${longitude}`;
+        const mapsLink = `https://www.google.com/maps?q=${latitude},${longitude}`;
         setDeliveryLocation(mapsLink);
         setIsGettingLocation(false);
       },

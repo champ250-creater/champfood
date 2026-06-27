@@ -1,13 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-
-// CHANGE THIS TO YOUR RENDER URL WHEN YOU DEPLOY TO VERCEL
-// Remove this:
-// const API_URL = 'http://localhost:5000/api/auth';
-
-// Add your live Render URL:
-const API_URL = 'https://champfood.onrender.com/api/auth';
+import { authService } from '../services';
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
@@ -20,23 +14,12 @@ export default function ForgotPassword() {
     setMessage('');
 
     try {
-      const response = await fetch(`${API_URL}/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok || !data.success) {
-        throw new Error(data.message || 'Habaye ikibazo (Something went wrong)');
-      }
-
+      const response = await authService.forgotPassword(email);
       setStatus('success');
-      setMessage(data.message);
+      setMessage(response.data.message || 'Link yoherejwe kuri email yawe.');
     } catch (error) {
       setStatus('error');
-      setMessage(error.message);
+      setMessage(error.response?.data?.message || 'Habaye ikibazo (Something went wrong)');
     }
   };
 

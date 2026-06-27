@@ -1,11 +1,17 @@
 import apiClient from './api';
 
+export { default as apiClient } from './api';
+
 // Auth APIs
 export const authService = {
   signup: (email, password, name) =>
     apiClient.post('/auth/signup', { email, password, name }),
   login: (email, password) =>
     apiClient.post('/auth/login', { email, password }),
+  forgotPassword: (email) =>
+    apiClient.post('/auth/forgot-password', { email }),
+  resetPassword: (token, password) =>
+    apiClient.post(`/auth/reset-password/${token}`, { password }),
 };
 
 // Food APIs
@@ -30,7 +36,6 @@ export const cartService = {
 
 // Order APIs
 export const orderService = {
-  // NEW: Added deliveryLocation so it travels to your Render backend!
   createOrder: (items, totalPrice, deliveryLocation) =>
     apiClient.post('/orders', { items, totalPrice, deliveryLocation }),
   getOrders: () => apiClient.get('/orders'),

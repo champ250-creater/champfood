@@ -74,7 +74,7 @@ export default function Orders() {
                     Komande #{order.id}
                   </h3>
                   <p className="text-gray-600 text-sm">
-                    {formatDate(order.createdAt)}
+                    {formatDate(order.created_at || order.createdAt)}
                   </p>
                 </div>
                 <div className="flex items-center gap-4 mt-4 md:mt-0">

@@ -1,33 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import apiClient from '../services/api';
 
 export default function OAuthSuccess() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    // 1. Read the URL to find the "?token=..." part
     const params = new URLSearchParams(location.search);
     const token = params.get('token');
 
     if (token) {
-      // 2. Save the token to local storage so the api.js file can use it
+      // Save the token first
       localStorage.setItem('token', token);
-      
-      // 3. Teleport the user to the home page
+
+      // Now try to decode the JWT to get user info
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const user = {
+          id: payload.userId || payload.id,
+          email: payload.email,
+          name: payload.name || payload.email.split('@')[0],
+        };
+        localStorage.setItem('user', JSON.stringify(user));
+      } catch (err) {
+        // If decoding fails, store a minimal user object
+        console.error('Could not decode token:', err);
+        localStorage.setItem('user', JSON.stringify({ name: 'User' }));
+      }
+
+      // Redirect to home
       navigate('/');
     } else {
-      // If no token is found, send them back to login
       navigate('/login?error=missing_token');
     }
   }, [navigate, location]);
 
-  // A quick loading screen while the redirect happens
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-      <h2 className="text-xl font-semibold text-gray-700">Kwinjira...</h2>
-      <p className="text-gray-500 text-sm mt-2">Mwihangane gato</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900">
+      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mb-4"></div>
+      <h2 className="text-xl font-semibold text-slate-700 dark:text-slate-200">Kwinjira...</h2>
+      <p className="text-slate-500 dark:text-slate-400 text-sm mt-2">Mwihangane gato</p>
+      {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
     </div>
   );
 }

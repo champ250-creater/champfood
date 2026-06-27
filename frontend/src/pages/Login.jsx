@@ -67,7 +67,9 @@ export default function Login() {
 
   // ADDED: Social login redirect handler
   const handleSocialLogin = (providerId) => {
-    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+    // Remove trailing /api if present so we don't get /api/api/auth/
+    const backendUrl = apiUrl.replace(/\/api\/?$/, '');
     window.location.href = `${backendUrl}/api/auth/${providerId}`;
   };
 
