@@ -97,6 +97,15 @@ const setupDatabase = async () => {
       ALTER TABLE orders ADD COLUMN IF NOT EXISTS delivery_location TEXT;
     `);
 
+    // Profile columns (safe to run multiple times)
+    await client.query(`
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS phone VARCHAR(20);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS bio TEXT;
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_url VARCHAR(500);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS city VARCHAR(100);
+      ALTER TABLE users ADD COLUMN IF NOT EXISTS address TEXT;
+    `);
+
     console.log('✅ Database tables created successfully!');
   } catch (error) {
     console.error('❌ Error setting up database:', error.message);
