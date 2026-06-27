@@ -2,26 +2,17 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto';
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 
 // ─────────────────────────────────────────────────────────────
-// Email transporter (Gmail + forced IPv4 to avoid Render IPv6 issues)
+// Email API (SendGrid via HTTP — Render blocks normal SMTP)
 // ─────────────────────────────────────────────────────────────
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com',
-    pass: process.env.EMAIL_PASSWORD || 'fhstinrwexhedajl',
-  },
-  // CRITICAL: Force IPv4 — Render cannot reach Google SMTP over IPv6
-  tls: { rejectUnauthorized: false },
-  dnsOptions: { family: 4 },
-});
+const SENDGRID_KEY = process.env.SENDGRID_API_KEY || 'wH8Q4t910iIrghATn8u0eNyQe8t5Jamo';
+sgMail.setApiKey(SENDGRID_KEY);
 
-// Verify connection on startup
-transporter.verify()
-  .then(() => console.log('✅ Email transporter is ready (Gmail / IPv4)'))
-  .catch((err) => console.error('❌ Email transporter error:', err.message));
+if (!SENDGRID_KEY.startsWith('SG.')) {
+  console.warn('⚠️  WARNING: Your SENDGRID_API_KEY does not start with "SG." — emails will likely fail with a 401 Unauthorized.');
+}
 
 // ─────────────────────────────────────────────────────────────
 // Generate a 6-digit OTP
@@ -102,15 +93,16 @@ class AuthService {
     const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
     const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-    // 3. Save hashed OTP to DB (reusing reset_password_token / reset_password_expires columns)
+    // 3. Save hashed OTP to DB
     await pool.query(
       'UPDATE users SET reset_password_token = $1, reset_password_expires = $2 WHERE email = $3',
       [hashedOTP, expiresAt, email]
     );
 
-    // 4. Send OTP email via Gmail
-    const mailOptions = {
-      from: `"NTUMA" <${process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com'}>`,
+    // 4. Send OTP email via SendGrid API
+    const fromEmail = process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com';
+    const msg = {
+      from: fromEmail,
       to: email,
       subject: 'NTUMA - Your Password Reset Code',
       html: `
@@ -136,13 +128,16 @@ class AuthService {
     };
 
     try {
-      console.log(`📧 Sending OTP to ${email}...`);
-      await transporter.sendMail(mailOptions);
+      console.log(`📧 Sending OTP to ${email} via SendGrid...`);
+      await sgMail.send(msg);
       console.log(`✅ OTP sent successfully to ${email}`);
     } catch (emailError) {
-      console.error('❌ Email send failed:', emailError.message);
-      console.error('   Code:', emailError.code || 'unknown');
-      // Don't crash — let the controller handle it
+      console.error('❌ SendGrid email failed:');
+      console.error('   Status:', emailError?.code || emailError?.response?.statusCode || 'unknown');
+      console.error('   Message:', emailError?.message || 'unknown');
+      if (emailError?.response?.body) {
+        console.error('   Body:', JSON.stringify(emailError.response.body, null, 2));
+      }
       const error = new Error('Failed to send OTP email. Please try again.');
       error.status = 500;
       throw error;
@@ -153,11 +148,9 @@ class AuthService {
 
   // ─── VERIFY OTP & RESET PASSWORD ──────────────────────────
   static async verifyOTPAndResetPassword(email, otp, newPassword) {
-    // 1. Hash the OTP the user entered
     const hashedOTP = crypto.createHash('sha256').update(otp).digest('hex');
     const currentTime = new Date();
 
-    // 2. Find user with matching OTP that hasn't expired
     const userResult = await pool.query(
       'SELECT * FROM users WHERE email = $1 AND reset_password_token = $2 AND reset_password_expires > $3',
       [email, hashedOTP, currentTime]
@@ -169,7 +162,6 @@ class AuthService {
       throw error;
     }
 
-    // 3. Update the password
     const user = userResult.rows[0];
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
