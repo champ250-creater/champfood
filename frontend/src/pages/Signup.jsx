@@ -35,12 +35,7 @@ const itemVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } },
 };
 
-const socialProviders = [
-  { name: 'Google', icon: FaGoogle, providerId: 'google' },
-  { name: 'Facebook', icon: FaFacebookF, providerId: 'facebook' },
-  { name: 'LinkedIn', icon: FaLinkedinIn, providerId: 'linkedin' },
-  { name: 'Apple', icon: FaApple, providerId: 'apple' },
-];
+
 
 const benefits = [
   { icon: FaTruck, label: 'Fast delivery' },
@@ -281,23 +276,17 @@ export default function Signup() {
               <span className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
             </div>
 
-            <div className="grid grid-cols-4 gap-3">
-              {socialProviders.map((provider) => {
-                const Icon = provider.icon;
-                return (
-                  <button
-                    key={provider.name}
-                    type="button"
-                    onClick={() => handleSocialLogin(provider.providerId)}
-                    className="focus-ring flex h-10 items-center justify-center rounded-lg border border-slate-200 bg-white text-lg text-slate-700 shadow-sm hover:border-emerald-300 hover:text-emerald-700 hover:shadow-md dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:border-emerald-400/50"
-                    aria-label={`Continue with ${provider.name}`}
-                    title={provider.name}
-                  >
-                    <Icon aria-hidden="true" />
-                  </button>
-                );
-              })}
-            </div>
+            {/* Google OAuth — single full-width button */}
+            <motion.button
+              whileHover={{ y: -1 }}
+              whileTap={{ scale: 0.98 }}
+              type="button"
+              onClick={() => handleSocialLogin('google')}
+              className="flex h-[50px] w-full items-center justify-center gap-3 rounded-lg border border-slate-200 bg-white text-sm font-bold text-slate-700 shadow-sm hover:border-red-400 hover:text-red-600 hover:shadow-md transition-all duration-200 dark:border-white/10 dark:bg-white/5 dark:text-slate-100 dark:hover:border-red-400/60"
+            >
+              <FaGoogle aria-hidden="true" className="text-lg" />
+              Continue with Google
+            </motion.button>
 
             <motion.p variants={itemVariants} className="mt-4 text-center text-sm font-semibold text-slate-500 dark:text-slate-400">
               Umaze kugira konti?{' '}
