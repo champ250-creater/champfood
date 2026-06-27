@@ -201,7 +201,7 @@ export default function AdminDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-300">
+    <div className="min-h-screen bg-transparent transition-colors duration-300">
       {/* Toast Container */}
       <div className="fixed top-4 right-4 z-50 flex flex-col gap-2 w-80">
         <AnimatePresence>
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
                   onChange={handleChange}
                   required
                   placeholder="e.g. Isombe with Ugali"
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                 />
               </div>
 
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
                     required
                     min="0"
                     placeholder="e.g. 3500"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                   />
                 </div>
                 <div>
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
                     name="category"
                     value={formData.category}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition"
                   >
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
@@ -311,7 +311,7 @@ export default function AdminDashboard() {
                   className={`relative cursor-pointer rounded-xl border-2 border-dashed transition-all duration-200 overflow-hidden
                     ${isDragging
                       ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20 scale-[1.01]'
-                      : 'border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 hover:border-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10'}`}
+                      : 'border-slate-200 dark:border-slate-600 bg-transparent/50 hover:border-emerald-400 hover:bg-emerald-50/50 dark:hover:bg-emerald-900/10'}`}
                 >
                   {imagePreview ? (
                     <div className="relative">
@@ -352,7 +352,7 @@ export default function AdminDashboard() {
                   required
                   rows={3}
                   placeholder="Describe the dish, ingredients, taste..."
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent transition resize-none"
                 />
               </div>
 
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search items..."
-                  className="pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition w-48"
+                  className="pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition w-48"
                 />
               </div>
             </div>
@@ -426,7 +426,7 @@ export default function AdminDashboard() {
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-slate-50 dark:bg-slate-900/40 text-left">
+                    <tr className="bg-transparent/40 text-left">
                       <th className="px-6 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Item</th>
                       <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Category</th>
                       <th className="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Price</th>

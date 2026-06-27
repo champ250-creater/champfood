@@ -223,7 +223,7 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-transparent">
         <div className="flex flex-col items-center gap-4">
           <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
           <p className="text-slate-500 font-semibold">Loading your profile...</p>
@@ -233,7 +233,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 pb-16">
+    <div className="min-h-screen bg-transparent pb-16">
       {/* Toast */}
       <AnimatePresence>
         {toast && <Toast msg={toast.msg} type={toast.type} onClose={() => setToast(null)} />}
@@ -322,7 +322,7 @@ export default function Profile() {
                         <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5">Full Name *</label>
                         <input
                           value={infoForm.name} onChange={e => setInfoForm(p => ({ ...p, name: e.target.value }))}
-                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                         />
                       </div>
                       <div>
@@ -330,7 +330,7 @@ export default function Profile() {
                         <input
                           value={infoForm.phone} onChange={e => setInfoForm(p => ({ ...p, phone: e.target.value }))}
                           placeholder="+250 7XX XXX XXX"
-                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                          className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                         />
                       </div>
                     </div>
@@ -339,7 +339,7 @@ export default function Profile() {
                       <textarea
                         value={infoForm.bio} onChange={e => setInfoForm(p => ({ ...p, bio: e.target.value }))}
                         rows={3} placeholder="Tell us a little about yourself..."
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition resize-none"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition resize-none"
                       />
                     </div>
                     <div className="flex gap-3">
@@ -361,7 +361,7 @@ export default function Profile() {
                       { label: 'Phone Number', value: profile?.phone || 'Not set', icon: '📞' },
                       { label: 'Bio', value: profile?.bio || 'No bio yet', icon: '✍️' },
                     ].map(f => (
-                      <div key={f.label} className="flex items-start gap-3 p-3 rounded-xl bg-slate-50 dark:bg-slate-900/40">
+                      <div key={f.label} className="flex items-start gap-3 p-3 rounded-xl bg-transparent/40">
                         <span className="text-lg mt-0.5">{f.icon}</span>
                         <div>
                           <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">{f.label}</p>
@@ -387,7 +387,7 @@ export default function Profile() {
                       <input
                         value={addressForm.city} onChange={e => setAddressForm(p => ({ ...p, city: e.target.value }))}
                         placeholder="e.g. Kigali, Gasabo"
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
                       />
                     </div>
                     <div>
@@ -395,7 +395,7 @@ export default function Profile() {
                       <textarea
                         value={addressForm.address} onChange={e => setAddressForm(p => ({ ...p, address: e.target.value }))}
                         rows={2} placeholder="e.g. KG 123 St, near Kigali Heights..."
-                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition resize-none"
+                        className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition resize-none"
                       />
                     </div>
                     <div className="flex gap-3">
@@ -412,7 +412,7 @@ export default function Profile() {
                 ) : (
                   <motion.div key="view" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
                     {profile?.city || profile?.address ? (
-                      <div className="p-4 bg-slate-50 dark:bg-slate-900/40 rounded-xl space-y-1">
+                      <div className="p-4 bg-transparent/40 rounded-xl space-y-1">
                         {profile.city && <p className="font-bold text-slate-800 dark:text-white">📍 {profile.city}</p>}
                         {profile.address && <p className="text-slate-600 dark:text-slate-300 text-sm">{profile.address}</p>}
                       </div>
@@ -444,7 +444,7 @@ export default function Profile() {
               ) : (
                 <div className="space-y-3">
                   {orders.slice(0, 5).map(order => (
-                    <div key={order.id} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/40 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900/60 transition">
+                    <div key={order.id} className="flex items-center justify-between p-4 bg-transparent/40 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-900/60 transition">
                       <div>
                         <p className="font-bold text-slate-800 dark:text-white text-sm">Order #{order.id}</p>
                         <p className="text-slate-500 text-xs mt-0.5">
@@ -503,7 +503,7 @@ export default function Profile() {
               <div className="space-y-2">
                 <button
                   onClick={() => setShowChangePassword(!showChangePassword)}
-                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-left"
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-transparent/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-left"
                 >
                   <span className="flex items-center gap-3 text-sm font-bold text-slate-700 dark:text-slate-200">
                     🔐 Change Password
@@ -530,7 +530,7 @@ export default function Profile() {
                             value={pwForm[f.key]}
                             onChange={e => setPwForm(p => ({ ...p, [f.key]: e.target.value }))}
                             placeholder={f.placeholder}
-                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm"
+                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition text-sm"
                           />
                         </div>
                       ))}
@@ -544,14 +544,14 @@ export default function Profile() {
 
                 <Link
                   to="/cart"
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-sm font-bold text-slate-700 dark:text-slate-200"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-sm font-bold text-slate-700 dark:text-slate-200"
                 >
                   🛒 My Cart
                 </Link>
 
                 <Link
                   to="/orders"
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-900/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-sm font-bold text-slate-700 dark:text-slate-200"
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-transparent/40 hover:bg-slate-100 dark:hover:bg-slate-900/60 transition text-sm font-bold text-slate-700 dark:text-slate-200"
                 >
                   📦 Order History
                 </Link>
@@ -601,3 +601,4 @@ export default function Profile() {
     </div>
   );
 }
+

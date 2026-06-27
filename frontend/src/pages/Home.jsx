@@ -353,7 +353,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white px-4 py-16 dark:bg-slate-950/40 sm:px-6 lg:px-8">
+      <section className="bg-white/40 px-4 py-16 dark:bg-slate-950/20 sm:px-6 lg:px-8 backdrop-blur-sm">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
             <div>
@@ -463,7 +463,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-slate-950 px-4 py-16 text-white sm:px-6 lg:px-8">
+      <section className="bg-slate-950/80 backdrop-blur-md px-4 py-16 text-white sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-start">
           <div>
             <p className="text-sm font-black uppercase tracking-[0.18em] text-emerald-300">

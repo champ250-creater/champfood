@@ -25,7 +25,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-transparent p-4 transition-colors duration-300">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -62,7 +62,7 @@ export default function ResetPassword() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength="6"
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+                className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
                 placeholder="Nibura inyuguti 6..."
               />
             </div>

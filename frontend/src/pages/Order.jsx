@@ -24,7 +24,7 @@ export default function Order() {
 
   if (!orderData.items || orderData.items.length === 0) {
     return (
-      <div className="min-h-screen bg-light flex items-center justify-center">
+      <div className="min-h-screen bg-transparent flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-dark mb-4">Nta bintu byo gutumiza</h1>
           <button
@@ -101,7 +101,7 @@ export default function Order() {
 
   if (orderId) {
     return (
-      <div className="min-h-screen bg-light py-12 px-4">
+      <div className="min-h-screen bg-transparent py-12 px-4">
         <div className="max-w-2xl mx-auto">
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
@@ -121,7 +121,7 @@ export default function Order() {
               Inomero ya komande: <span className="font-bold text-primary">#{orderId}</span>
             </p>
 
-            <div className="bg-light p-6 rounded-lg mb-8">
+            <div className="bg-transparent p-6 rounded-lg mb-8">
               <h2 className="font-bold text-lg text-dark mb-4">Ibisobanuro bya Komande</h2>
               {orderData.items.map((item) => (
                 <div key={item.id} className="flex justify-between mb-2 text-sm">
@@ -146,7 +146,7 @@ export default function Order() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-light transition duration-300"
+              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-transparent transition duration-300"
             >
               Komeza guhaha
             </button>
@@ -157,7 +157,7 @@ export default function Order() {
   }
 
   return (
-    <div className="min-h-screen bg-light py-12 px-4">
+    <div className="min-h-screen bg-transparent py-12 px-4">
       <div className="max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -173,7 +173,7 @@ export default function Order() {
                 key={item.id}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="flex justify-between items-center p-4 bg-light rounded-lg"
+                className="flex justify-between items-center p-4 bg-transparent rounded-lg"
               >
                 <div className="flex items-center gap-4">
                   <img 
@@ -272,7 +272,7 @@ export default function Order() {
 
             <button
               onClick={() => navigate('/cart')}
-              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-light transition duration-300"
+              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-transparent transition duration-300"
             >
               Subira mu igare
             </button>

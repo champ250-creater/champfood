@@ -79,7 +79,7 @@ export default function Cart() {
   // Empty State with Dark Mode integration
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-light dark:bg-dark py-12 px-4 transition-colors duration-500 flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-transparent py-12 px-4 transition-colors duration-500 flex flex-col items-center justify-center">
         <div className="max-w-md w-full bg-white dark:bg-[#222222] rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)] border border-gray-100 dark:border-gray-800 transition-colors duration-500">
           <EmptyState
             title="Nta byatoranyijwe bihari"
@@ -108,7 +108,7 @@ export default function Cart() {
 
   return (
     // Main Container
-    <div className="min-h-screen bg-light dark:bg-dark py-12 px-4 transition-colors duration-500 relative overflow-hidden">
+    <div className="min-h-screen bg-transparent py-12 px-4 transition-colors duration-500 relative overflow-hidden">
       
       {/* Decorative Blur Backgrounds */}
       <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />

@@ -31,7 +31,7 @@ export default function Orders() {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen bg-light py-12 px-4">
+      <div className="min-h-screen bg-transparent py-12 px-4">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
           <EmptyState
@@ -45,7 +45,7 @@ export default function Orders() {
   }
 
   return (
-    <div className="min-h-screen bg-light py-12 px-4">
+    <div className="min-h-screen bg-transparent py-12 px-4">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold text-dark mb-8">Komande Zawe</h1>
 
@@ -100,7 +100,7 @@ export default function Orders() {
               </div>
 
               {/* Order Items */}
-              <div className="bg-light p-4 rounded-lg mb-4">
+              <div className="bg-transparent p-4 rounded-lg mb-4">
                 <h4 className="font-semibold text-dark mb-3">Ibyo Watumije</h4>
                 <div className="space-y-2">
                   {order.items?.map((item) => (

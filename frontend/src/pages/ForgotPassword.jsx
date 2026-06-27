@@ -115,7 +115,7 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4 transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center bg-transparent p-4 transition-colors duration-300">
       {/* Background blobs */}
       <div className="absolute top-20 left-20 w-72 h-72 bg-teal-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" />
       <div className="absolute top-40 right-20 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-pulse" style={{ animationDelay: '2s' }} />
@@ -164,7 +164,7 @@ export default function ForgotPassword() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
+                      className="w-full pl-12 pr-4 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
                       placeholder="champion@email.com"
                     />
                   </div>
@@ -234,7 +234,7 @@ export default function ForgotPassword() {
                         value={digit}
                         onChange={(e) => handleOtpChange(idx, e.target.value)}
                         onKeyDown={(e) => handleOtpKeyDown(idx, e)}
-                        className="w-12 h-14 text-center text-xl font-black rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/70 text-slate-800 dark:text-white focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
+                        className="w-12 h-14 text-center text-xl font-black rounded-xl border-2 border-slate-200 dark:border-slate-600 bg-transparent/70 text-slate-800 dark:text-white focus:outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all"
                         autoFocus={idx === 0}
                       />
                     ))}
@@ -255,7 +255,7 @@ export default function ForgotPassword() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       minLength={6}
-                      className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
+                      className="w-full pl-12 pr-12 py-3.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all font-medium"
                       placeholder="Nibura inyuguti 6..."
                     />
                     <button

@@ -18,8 +18,8 @@ html {
 body {
   font-family: 'Inter', sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(32, 194, 105, 0.12), transparent 32rem),
-    linear-gradient(180deg, #f7faf8 0%, #eef5f0 44%, #ffffff 100%);
+    linear-gradient(rgba(247, 250, 248, 0.85), rgba(255, 255, 255, 0.9)),
+    url('/123.png') center/cover fixed no-repeat;
   color: #14231d;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -27,8 +27,8 @@ body {
 
 html.dark body {
   background:
-    radial-gradient(circle at top left, rgba(32, 194, 105, 0.14), transparent 32rem),
-    linear-gradient(180deg, #071712 0%, #0b1f19 46%, #101827 100%);
+    linear-gradient(rgba(7, 23, 18, 0.85), rgba(16, 24, 39, 0.9)),
+    url('/123.png') center/cover fixed no-repeat;
   color: #ecfdf5;
 }
 
