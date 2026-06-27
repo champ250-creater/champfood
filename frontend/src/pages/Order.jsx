@@ -196,23 +196,23 @@ export default function Order() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-light p-6 rounded-lg mb-8">
+          <div className="bg-slate-900 text-white p-6 rounded-xl mb-8 shadow-lg">
             <div className="space-y-3">
-              <div className="flex justify-between">
+              <div className="flex justify-between text-slate-300">
                 <span>Igiteranyo gito</span>
-                <span>{formatPrice(orderData.subtotal)}</span>
+                <span className="font-medium text-white">{formatPrice(orderData.subtotal)}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-slate-300">
                 <span>Kugeza aho uri</span>
-                <span>{formatPrice(orderData.delivery)}</span>
+                <span className="font-medium text-white">{formatPrice(orderData.delivery)}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-slate-300">
                 <span>Umusoro (10%)</span>
-                <span>{formatPrice(orderData.tax)}</span>
+                <span className="font-medium text-white">{formatPrice(orderData.tax)}</span>
               </div>
-              <div className="flex justify-between font-bold text-lg border-t pt-3">
+              <div className="flex justify-between font-bold text-xl border-t border-slate-700 pt-4 mt-2">
                 <span>Igiteranyo cyose</span>
-                <span className="text-primary">{formatPrice(orderData.total)}</span>
+                <span className="text-emerald-400">{formatPrice(orderData.total)}</span>
               </div>
             </div>
           </div>
