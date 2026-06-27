@@ -2,10 +2,10 @@ import bcrypt from 'bcryptjs';
 import pool from '../config/database.js';
 import { generateToken } from '../config/jwt.js';
 import crypto from 'crypto';
-import { Resend } from 'resend';
+import sgMail from '@sendgrid/mail';
 
-// Initialize Resend with the provided key (or env variable as fallback)
-const resend = new Resend(process.env.RESEND_API_KEY || 're_EyL5hEVF_MLy6x5kF6PoSrvgCzBKV1cfE');
+// Initialize SendGrid with the provided key (or env variable as fallback)
+sgMail.setApiKey(process.env.SENDGRID_API_KEY || 'OCXCS3IMQLfCYMRzQSHw723M9gufOJWk');
 
 class AuthService {
   // --- SIGNUP ---
@@ -76,11 +76,11 @@ class AuthService {
 
       const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-      // Send the password reset email using Resend API
-      // Note: 'onboarding@resend.dev' is the default testing sender.
-      const { data, error } = await resend.emails.send({
-        from: 'TechBite <onboarding@resend.dev>',
+      // Send the password reset email using SendGrid API
+      // Note: The 'from' email MUST exactly match the Single Sender email you verified in SendGrid.
+      const msg = {
         to: email,
+        from: process.env.EMAIL_USERNAME || 'byishimovedaste19@gmail.com', // Fallback to your email if env is missing
         subject: 'TechBite Kigali - Password Reset Request',
         html: `
           <div style="font-family: sans-serif; padding: 20px; max-width: 600px; margin: 0 auto;">
@@ -95,11 +95,9 @@ class AuthService {
             <p style="color: #999; font-size: 12px;">TechBite Kigali &mdash; Food Ordering Platform</p>
           </div>
         `,
-      });
+      };
 
-      if (error) {
-        throw new Error(error.message);
-      }
+      await sgMail.send(msg);
 
       return { success: true, message: 'Email sent successfully!' };
 
