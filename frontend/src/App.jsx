@@ -21,7 +21,6 @@ import Contact from './pages/Contact';
 import FAQ from './pages/FAQ'; 
 import Terms from './pages/Terms'; 
 import Privacy from './pages/Privacy'; 
-import ForgotPassword from './pages/ForgotPassword';
 import AdminDashboard from './pages/AdminDashboard';
 import Profile from './pages/Profile';
 
@@ -80,9 +79,7 @@ function AnimatedRoutes() {
           </AdminRoute>
         } />
 
-        {/* Password Reset — OTP flow is all on the ForgotPassword page */}
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/*" element={<Navigate to="/forgot-password" replace />} />
+
         
         {/* Fallback Route */}
         <Route path="*" element={<Navigate to="/" replace />} />

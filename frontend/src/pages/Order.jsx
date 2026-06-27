@@ -175,11 +175,18 @@ export default function Order() {
                 animate={{ opacity: 1, x: 0 }}
                 className="flex justify-between items-center p-4 bg-light rounded-lg"
               >
-                <div>
-                  <h3 className="font-bold text-dark">{item.name}</h3>
-                  <p className="text-gray-600 text-sm">
-                    Umubare: {item.quantity}
-                  </p>
+                <div className="flex items-center gap-4">
+                  <img 
+                    src={item.image || 'https://via.placeholder.com/100x100?text=Food'} 
+                    alt={item.name} 
+                    className="w-16 h-16 object-cover rounded-lg shadow-sm"
+                  />
+                  <div>
+                    <h3 className="font-bold text-dark">{item.name}</h3>
+                    <p className="text-gray-600 text-sm">
+                      Umubare: {item.quantity}
+                    </p>
+                  </div>
                 </div>
                 <span className="font-bold text-primary">
                   {formatPrice(item.price * item.quantity)}

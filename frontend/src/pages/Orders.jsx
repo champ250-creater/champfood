@@ -106,12 +106,19 @@ export default function Orders() {
                   {order.items?.map((item) => (
                     <div
                       key={item.id}
-                      className="flex justify-between text-sm"
+                      className="flex justify-between items-center text-sm py-2"
                     >
-                      <span className="text-gray-600">
-                        {item.name} x{item.quantity}
-                      </span>
-                      <span className="font-semibold">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={item.image || 'https://via.placeholder.com/100x100?text=Food'} 
+                          alt={item.name} 
+                          className="w-12 h-12 object-cover rounded shadow-sm"
+                        />
+                        <span className="text-gray-600 font-medium">
+                          {item.name} x{item.quantity}
+                        </span>
+                      </div>
+                      <span className="font-semibold text-gray-800">
                         {formatPrice(item.price * item.quantity)}
                       </span>
                     </div>

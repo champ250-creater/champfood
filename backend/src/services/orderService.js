@@ -54,7 +54,8 @@ class OrderService {
                   'id', oi.id,
                   'name', f.name,
                   'quantity', oi.quantity,
-                  'price', oi.price
+                  'price', oi.price,
+                  'image', COALESCE(f.image_url, f.image)
                 )) as items
          FROM orders o
          LEFT JOIN order_items oi ON o.id = oi.order_id

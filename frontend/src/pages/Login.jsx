@@ -234,12 +234,6 @@ export default function Login() {
                   />
                   Remember me
                 </label>
-                <Link
-                  to="/forgot-password"
-                  className="rounded-lg text-sm font-black text-emerald-700 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200"
-                >
-                  Wibagiwe ijambobanga?
-                </Link>
               </motion.div>
 
               <motion.button
