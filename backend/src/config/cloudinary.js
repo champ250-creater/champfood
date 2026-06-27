@@ -23,3 +23,6 @@ const storage = new CloudinaryStorage({
 
 // 3. Create the 'upload' middleware we will use in our routes
 export const upload = multer({ storage: storage });
+
+// 4. Export the configured cloudinary instance for other files to use
+export default cloudinary;
