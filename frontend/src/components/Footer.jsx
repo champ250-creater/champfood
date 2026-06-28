@@ -20,7 +20,7 @@ export default function Footer() {
               <span>
                 <span className="block text-xl font-black">NTUMA</span>
                 <span className="block text-xs font-bold uppercase tracking-[0.18em] text-emerald-300">
-                  Good food mood
+                  Good food good mood
                 </span>
               </span>
             </Link>
