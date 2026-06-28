@@ -121,15 +121,15 @@ export default function Order() {
               Inomero ya komande: <span className="font-bold text-primary">#{orderId}</span>
             </p>
 
-            <div className="bg-transparent p-6 rounded-lg mb-8">
+            <div className="bg-gray-50 p-6 rounded-lg mb-8">
               <h2 className="font-bold text-lg text-dark mb-4">Ibisobanuro bya Komande</h2>
               {orderData.items.map((item) => (
-                <div key={item.id} className="flex justify-between mb-2 text-sm">
+                <div key={item.id} className="flex justify-between mb-2 text-sm text-gray-800">
                   <span>{item.name} x{item.quantity}</span>
                   <span>{formatPrice(item.price * item.quantity)}</span>
                 </div>
               ))}
-              <div className="border-t mt-4 pt-4 flex justify-between font-bold">
+              <div className="border-t border-gray-200 mt-4 pt-4 flex justify-between font-bold text-gray-800">
                 <span>Igiteranyo</span>
                 <span className="text-primary">{formatPrice(orderData.total)}</span>
               </div>
@@ -146,7 +146,7 @@ export default function Order() {
 
             <button
               onClick={() => navigate('/')}
-              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-transparent transition duration-300"
+              className="w-full border-2 border-primary text-primary font-semibold py-3 rounded-lg hover:bg-primary hover:text-white transition duration-300"
             >
               Komeza guhaha
             </button>
