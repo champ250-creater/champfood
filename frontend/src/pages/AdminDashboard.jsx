@@ -235,7 +235,7 @@ export default function AdminDashboard() {
           {/* ===== FORM PANEL ===== */}
           <motion.div
             layout
-            className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden sticky top-4"
+            className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden xl:sticky xl:top-4 z-10"
           >
             <div className={`px-6 py-4 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between ${editingId ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-emerald-50 dark:bg-emerald-900/20'}`}>
               <div className="flex items-center gap-2">
@@ -392,7 +392,7 @@ export default function AdminDashboard() {
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                   placeholder="Search items..."
-                  className="pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition w-48"
+                  className="pl-9 pr-4 py-2 text-sm rounded-xl border border-slate-200 dark:border-slate-600 bg-transparent/50 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition w-full sm:w-48"
                 />
               </div>
             </div>
